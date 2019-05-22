@@ -3,7 +3,7 @@ project(openGL_Glitch)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(openGL_Glitch src/main.cpp glad/src/glad.c)
+add_executable(openGL_Glitch src/main.cpp glad/src/glad.c src/init.cc src/init.hh src/shader_build.cc src/shader_build.hh)
 
 
 #OpenGL

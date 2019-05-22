@@ -24,7 +24,7 @@ namespace Init
 
     GLFWwindow *init_window(int width, int height)
     {
-        GLFWwindow* window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
+        GLFWwindow* window = glfwCreateWindow(width, height, "OpenGL - Glitch", NULL, NULL);
         if (window == NULL)
         {
             std::cout << "Failed to create GLFW window" << std::endl;

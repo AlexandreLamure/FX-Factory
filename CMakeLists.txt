@@ -3,7 +3,7 @@ project(openGL_Glitch)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(openGL_Glitch src/main.cpp glad/src/glad.c src/init.cc src/init.hh src/shader_build.cc src/shader_build.hh)
+add_executable(openGL_Glitch src/main.cpp glad/src/glad.c src/init.cc src/init.hh src/shader_build.cc src/shader_build.hh src/mesh.cc src/mesh.hh)
 
 
 #OpenGL
@@ -18,7 +18,10 @@ add_library(GLAD glad/src/glad.c)
 target_include_directories(GLAD PRIVATE glad/include)
 target_include_directories(openGL_Glitch PRIVATE glad/include)
 
+# ASSIMP
+find_package(assimp REQUIRED)
+
 
 include_directories(${OPENGL_INCLUDE_DIRS} ${GLFW_INCLUDE_DIRS})
 
-target_link_libraries(openGL_Glitch ${OPENGL_LIBRARIES} ${GLFW_LIBRARIES} GLAD ${CMAKE_DL_LIBS})
+target_link_libraries(openGL_Glitch ${OPENGL_LIBRARIES} ${GLFW_LIBRARIES} GLAD ${CMAKE_DL_LIBS} assimp)

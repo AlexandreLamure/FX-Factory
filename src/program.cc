@@ -80,11 +80,11 @@ void Program::build()
     const char *vertex_src = load("../shaders/vertex.glsl");
     const char *fragment_src = load("../shaders/fragment.glsl");
 
-    vertex_shader = glCreateShader(GL_VERTEX_SHADER); TEST_OPENGL_ERROR();
-    fragment_shader = glCreateShader(GL_FRAGMENT_SHADER); TEST_OPENGL_ERROR();
+    GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER); TEST_OPENGL_ERROR();
+    GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER); TEST_OPENGL_ERROR();
     compile(vertex_shader, vertex_src);
     compile(fragment_shader, fragment_src);
 
     program_id = glCreateProgram(); TEST_OPENGL_ERROR();
-    link(program_id, vertex_shader, fragment_shader);
+    link(vertex_shader, fragment_shader);
 }

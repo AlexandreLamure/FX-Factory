@@ -4,7 +4,6 @@
 #include <cmath>
 
 #include "init.hh"
-#include "shader_build.hh"
 #include "program.hh"
 
 
@@ -74,7 +73,7 @@ int main() {
         // update uniform value
         float timeValue = glfwGetTime();
         float greenValue = std::sin(timeValue) / 2.0f + 0.5f;
-        int vertexColorLocation = glGetUniformLocation(program.fragment_shader, "color");
+        GLint vertexColorLocation = glGetUniformLocation(program.program_id, "toto");
         glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
 

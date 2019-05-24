@@ -17,8 +17,6 @@ private:
 
 public:
     GLuint program_id;
-    GLuint vertex_shader;
-    GLuint fragment_shader;
 
     void build();
 };

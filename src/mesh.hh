@@ -31,7 +31,7 @@ public:
     std::vector<Texture> textures;
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-    void Draw(Program program);
+    void draw(Program program);
 
 private:
     unsigned int VAO, VBO, EBO;

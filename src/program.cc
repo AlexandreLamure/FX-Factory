@@ -16,8 +16,6 @@
 
 
 
-
-
 const char *Program::load(const std::string &filename)
 {
     std::ifstream input_src_file(filename, std::ios::in);
@@ -75,10 +73,10 @@ void Program::link(GLuint vertex_shader, GLuint fragment_shader)
     glDeleteShader(fragment_shader);
 }
 
-void Program::build()
+void Program::build(const char *vertex_path, const char *fragment_path)
 {
-    const char *vertex_src = load("../shaders/vertex.glsl");
-    const char *fragment_src = load("../shaders/fragment.glsl");
+    const char *vertex_src = load(vertex_path);
+    const char *fragment_src = load(fragment_path);
 
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER); TEST_OPENGL_ERROR();
     GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER); TEST_OPENGL_ERROR();
@@ -87,4 +85,63 @@ void Program::build()
 
     program_id = glCreateProgram(); TEST_OPENGL_ERROR();
     link(vertex_shader, fragment_shader);
+}
+
+void Program::set_bool(const std::string &name, bool value) const
+{
+    glUniform1i(glGetUniformLocation(program_id, name.c_str()), (int)value);
+}
+
+void Program::set_int(const std::string &name, int value) const
+{
+    glUniform1i(glGetUniformLocation(program_id, name.c_str()), value);
+}
+
+void Program::set_float(const std::string &name, float value) const
+{
+    glUniform1f(glGetUniformLocation(program_id, name.c_str()), value);
+}
+
+void Program::set_vec2(const std::string &name, const glm::vec2 &value) const
+{
+    glUniform2fv(glGetUniformLocation(program_id, name.c_str()), 1, &value[0]);
+}
+
+void Program::set_vec2(const std::string &name, float x, float y) const
+{
+    glUniform2f(glGetUniformLocation(program_id, name.c_str()), x, y);
+}
+
+void Program::set_vec3(const std::string &name, const glm::vec3 &value) const
+{
+    glUniform3fv(glGetUniformLocation(program_id, name.c_str()), 1, &value[0]);
+}
+
+void Program::set_vec3(const std::string &name, float x, float y, float z) const
+{
+    glUniform3f(glGetUniformLocation(program_id, name.c_str()), x, y, z);
+}
+
+void Program::set_vec4(const std::string &name, const glm::vec4 &value) const
+{
+    glUniform4fv(glGetUniformLocation(program_id, name.c_str()), 1, &value[0]);
+}
+void Program::set_vec4(const std::string &name, float x, float y, float z, float w)
+{
+    glUniform4f(glGetUniformLocation(program_id, name.c_str()), x, y, z, w);
+}
+
+void Program::set_mat2(const std::string &name, const glm::mat2 &mat) const
+{
+    glUniformMatrix2fv(glGetUniformLocation(program_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+void Program::set_mat3(const std::string &name, const glm::mat3 &mat) const
+{
+    glUniformMatrix3fv(glGetUniformLocation(program_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+void Program::set_mat4(const std::string &name, const glm::mat4 &mat) const
+{
+    glUniformMatrix4fv(glGetUniformLocation(program_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }

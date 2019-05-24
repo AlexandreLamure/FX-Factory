@@ -22,7 +22,7 @@ int main() {
     GLFWwindow *window = Init::init_all(window_w, window_h);
 
     Program program;
-    program.build();
+    program.build("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
@@ -71,10 +71,8 @@ int main() {
 
 
         // update uniform value
-        float timeValue = glfwGetTime();
-        float greenValue = std::sin(timeValue) / 2.0f + 0.5f;
-        GLint vertexColorLocation = glGetUniformLocation(program.program_id, "toto");
-        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+        float time_value = glfwGetTime();
+        program.set_float("time", time_value);
 
 
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized

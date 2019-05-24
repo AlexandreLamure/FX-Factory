@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
+#include "program.hh"
 
 
 struct Vertex {
@@ -30,7 +31,7 @@ public:
     std::vector<Texture> textures;
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-    //void Draw(Shader shader);
+    void Draw(Program program);
 
 private:
     unsigned int VAO, VBO, EBO;

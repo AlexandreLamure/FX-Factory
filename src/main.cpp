@@ -1,9 +1,11 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <cmath>
 
 #include "init.hh"
 #include "shader_build.hh"
+#include "program.hh"
 
 
 void process_input(GLFWwindow *window)
@@ -20,7 +22,8 @@ int main() {
 
     GLFWwindow *window = Init::init_all(window_w, window_h);
 
-    GLuint program = ShaderBuild::build();
+    Program program;
+    program.build();
 
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
@@ -65,7 +68,16 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         // draw our first triangle
-        glUseProgram(program);
+        glUseProgram(program.program_id);
+
+
+        // update uniform value
+        float timeValue = glfwGetTime();
+        float greenValue = std::sin(timeValue) / 2.0f + 0.5f;
+        int vertexColorLocation = glGetUniformLocation(program.fragment_shader, "color");
+        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+
+
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawArrays(GL_TRIANGLES, 0, 3);
         // glBindVertexArray(0); // no need to unbind it every time

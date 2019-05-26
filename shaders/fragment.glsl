@@ -2,11 +2,11 @@
 
 in vec4 gl_FragCoord;
 
-uniform float time;
+uniform float total_time;
 
 out vec4 FragColor;
 
 void main()
 {
-    FragColor = vec4(cos(2*time) / 2., sin(time) / 2., 0.2f, 1);
+    FragColor = vec4(cos(2*total_time) / 2., sin(total_time) / 2., 0.2f, 1);
 }

@@ -55,6 +55,9 @@ namespace Init
         // init GLAD
         init_glad();
 
+        // Set OpenGL options
+        glEnable(GL_DEPTH_TEST);
+
         // tell the size of window to openGL
         glViewport(0, 0, width, height);
 

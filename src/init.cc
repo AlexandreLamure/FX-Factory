@@ -60,6 +60,8 @@ namespace Init
 
         // Set OpenGL options
         glEnable(GL_DEPTH_TEST);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glEnable(GL_CULL_FACE);
 
         // tell the size of window to openGL
         glViewport(0, 0, width, height);

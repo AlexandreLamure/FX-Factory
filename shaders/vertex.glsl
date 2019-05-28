@@ -11,9 +11,22 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+uniform vec3 light_color;
+uniform vec3 light_position;
+
 
 void main()
 {
-    gl_Position = projection * view * model * vec4(position, 1);
-    interpolated_color = vec4(1);
+    vec4 new_pos = model * vec4(position, 1);
+
+    // light computation
+    vec3 ligt_dir = vec3(light_position - new_pos.xyz);
+	float coef = dot(normalize(normal), normalize(ligt_dir));
+	coef = clamp(coef, 0, 1);
+	interpolated_color = vec4(coef, coef, coef, 1.);
+    //interpolated_color = vec4(1);
+
+    gl_Position = projection * view * new_pos;
+
+    interpolated_tex_coords = tex_coords;
 }

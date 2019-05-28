@@ -97,10 +97,14 @@ int main()
     Program program("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 
 
-    //Model obj("../resources/varia-suit/DolBarriersuit.obj");
-    Model obj("../resources/crysis-nano-suit-2/nanosuit.obj");
+    Model obj("../resources/varia-suit/DolBarriersuit.obj");
+    //Model obj("../resources/crysis-nano-suit-2/nanosuit.obj");
     //Model obj("../resources/cube/cube.obj");
+    //Model obj("../resources/textured-cube/textured-cube.obj");
 
+    // set lights
+    program.set_vec3("light_color", 1.0, 1.0, 1.0);
+    program.set_vec3("light_position", 0.0f, 0.0f, 5.0f);
 
     // main loop
     while(!glfwWindowShouldClose(window))

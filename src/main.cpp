@@ -31,7 +31,8 @@ int main()
     program.build("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 
 
-    Model obj("../resources/varia-suit/DolBarriersuit.obj");
+    //Model obj("../resources/varia-suit/DolBarriersuit.obj");
+    Model obj("../resources/crysis-nano-suit-2/nanosuit.obj");
     //Model obj("../resources/cube/cube.obj");
 
 
@@ -58,13 +59,13 @@ int main()
         program.set_float("delta_time", delta_time);
 
         glm::mat4 model = glm::mat4(1.f);
-        model = glm::translate(model, glm::vec3(-0.3, -0.7f, 0.f));
+        model = glm::translate(model, glm::vec3(-0.3, -8.f, 0.f));
         model = glm::rotate(model, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
-        model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+        //model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
         program.set_mat4("model", model);
 
         glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -25.0f));
         program.set_mat4("view", view);
 
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)window_w/(float)window_h, 0.1f, 100.0f);

@@ -1,0 +1,82 @@
+# Blender MTL File: 'None'
+# Material Count: 6
+
+newmtl Arm
+Ns 3.921569
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.085000 0.085000 0.085000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 6
+map_Kd arm_dif.png
+map_Ns arm_dif.png
+map_d arm_dif.png
+
+newmtl Body
+Ns 3.921569
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.085000 0.085000 0.085000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 6
+map_Kd body_dif.png
+map_d body_dif.png
+
+newmtl Glass
+Ns 3.921569
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.655000 0.655000 0.655000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 3
+map_Bump -bm 0.140017 glass_ddn.png
+map_Kd glass_dif.png
+
+newmtl Hand
+Ns 3.921569
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.095000 0.095000 0.095000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 6
+map_Bump -bm 0.140017 hand_showroom_ddn.png
+map_Kd hand_dif.png
+map_Ns hand_showroom_ddn.png
+map_d hand_dif.png
+
+newmtl Helmet
+Ns 1.960784
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.120000 0.120000 0.120000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 6
+map_Bump -bm 0.140017 helmet_showroom_ddn.png
+map_Kd helmet_dif.png
+map_Ks hand_showroom_spec.png
+map_Ns H:/LightWave File/BASE FILES/Objects/G A M E S  &  F U N/Nano Suit 2/tex/helmet_showroom_spec.png
+map_d helmet_dif.png
+
+newmtl Leg
+Ns 3.921569
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.090000 0.090000 0.090000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 6
+map_Bump -bm 0.140017 leg_showroom_ddn.png
+map_Kd leg_dif.png
+map_Ns leg_showroom_ddn.png
+map_d leg_dif.png

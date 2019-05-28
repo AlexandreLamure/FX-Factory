@@ -9,6 +9,7 @@ add_executable(openGL_Glitch
                src/mesh.cc src/mesh.hh
                src/program.cc src/program.hh
                src/model.cc src/model.hh
+               src/camera.cc src/camera.hh
                src/main.cpp)
 
 

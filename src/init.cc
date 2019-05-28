@@ -52,6 +52,9 @@ namespace Init
         // init GLFW window
         GLFWwindow *window = init_window(width, height);
 
+        // set mouse input options for GLFW
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
         // init GLAD
         init_glad();
 

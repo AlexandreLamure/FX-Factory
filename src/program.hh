@@ -22,7 +22,7 @@ private:
 public:
     GLuint program_id;
 
-    void build(const char *vertex_path, const char *fragment_path);
+    Program(const char *vertex_path, const char *fragment_path);
 
     void set_bool(const std::string &name, bool value) const;
     void set_int(const std::string &name, int value) const;

@@ -73,7 +73,7 @@ void Program::link(GLuint vertex_shader, GLuint fragment_shader)
     glDeleteShader(fragment_shader);
 }
 
-void Program::build(const char *vertex_path, const char *fragment_path)
+Program::Program(const char *vertex_path, const char *fragment_path)
 {
     const char *vertex_src = load(vertex_path);
     const char *fragment_src = load(fragment_path);

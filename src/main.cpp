@@ -2,6 +2,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "init.hh"
 #include "program.hh"
@@ -30,8 +33,8 @@ int main() {
     program.build("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 
 
-    //Model model("../resources/varia-suit/DolBarriersuit.obj");
-    Model model("../resources/cube/cube.obj");
+    Model model("../resources/varia-suit/DolBarriersuit.obj");
+    //Model model("../resources/cube/cube.obj");
 
 
     // main loop
@@ -52,7 +55,16 @@ int main() {
         // draw our first triangle
         glUseProgram(program.program_id);
 
+        // set uniforms
         program.set_float("total_time", total_time);
+        program.set_float("delta_time", delta_time);
+
+        glm::mat4 m = glm::mat4(1.f);
+        m = glm::translate(m, glm::vec3(-0.5, 0.f, 0.f));
+        //m = glm::rotate(m, glm::radians(90.f), glm::vec3(0.f, 0.f, 1.f));
+        m = glm::scale(m, glm::vec3(0.05f, 0.05f, 0.05f));
+        program.set_mat4("m", m);
+
 
         model.draw(program);
 

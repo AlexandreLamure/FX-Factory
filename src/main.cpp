@@ -4,7 +4,6 @@
 #include <cmath>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "init.hh"
 #include "program.hh"
@@ -18,9 +17,8 @@ void process_input(GLFWwindow *window)
 }
 
 
-
-int main() {
-
+int main()
+{
     int window_w = 800;
     int window_h = 600;
     float total_time = 0.f;
@@ -33,8 +31,8 @@ int main() {
     program.build("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 
 
-    Model model("../resources/varia-suit/DolBarriersuit.obj");
-    //Model model("../resources/cube/cube.obj");
+    Model obj("../resources/varia-suit/DolBarriersuit.obj");
+    //Model obj("../resources/cube/cube.obj");
 
 
     // main loop
@@ -59,14 +57,21 @@ int main() {
         program.set_float("total_time", total_time);
         program.set_float("delta_time", delta_time);
 
-        glm::mat4 m = glm::mat4(1.f);
-        m = glm::translate(m, glm::vec3(-0.5, 0.f, 0.f));
-        //m = glm::rotate(m, glm::radians(90.f), glm::vec3(0.f, 0.f, 1.f));
-        m = glm::scale(m, glm::vec3(0.05f, 0.05f, 0.05f));
-        program.set_mat4("m", m);
+        glm::mat4 model = glm::mat4(1.f);
+        model = glm::translate(model, glm::vec3(-0.3, -0.7f, 0.f));
+        model = glm::rotate(model, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
+        model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+        program.set_mat4("model", model);
+
+        glm::mat4 view = glm::mat4(1.0f);
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        program.set_mat4("view", view);
+
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)window_w/(float)window_h, 0.1f, 100.0f);
+        program.set_mat4("projection", projection);
 
 
-        model.draw(program);
+        obj.draw(program);
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

@@ -10,12 +10,10 @@ out vec2 interpolated_tex_coords;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-// temporary
-uniform mat4 m;
 
 
 void main()
 {
-    gl_Position = /*projection * view * model * */m * vec4(position, 1);
+    gl_Position = projection * view * model * vec4(position, 1);
     interpolated_color = vec4(1);
 }

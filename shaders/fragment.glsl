@@ -11,24 +11,46 @@ uniform float total_time;
 uniform sampler2D texture_diffuse1;
 
 uniform vec3 ambient_light_color;
-uniform vec3 diffuse1_light_color;
-uniform vec3 diffuse1_light_position;
-uniform vec3 diffuse2_light_color;
-uniform vec3 diffuse2_light_position;
+uniform vec3 light1_color;
+uniform vec3 light1_position;
+uniform vec3 light2_color;
+uniform vec3 light2_position;
+uniform vec3 camera_pos;
 
 void main()
 {
-    // light computation
-    vec3 diffuse1_light_dir = vec3(diffuse1_light_position - interpolated_pos.xyz);
-    float coef = dot(normalize(interpolated_normal), normalize(diffuse1_light_dir));
+    // Light Computation
+    vec3 normal = normalize(interpolated_normal);
+
+    // diffuse 1
+    vec3 light1_dir = normalize(vec3(light1_position - interpolated_pos.xyz));
+    float coef = dot(normal, light1_dir);
     coef = clamp(coef, 0, 1);
-    vec3 light_color = diffuse1_light_color * coef;
+    vec3 light_color = light1_color * coef;
 
-    vec3 diffuse2_light_dir = vec3(diffuse2_light_position - interpolated_pos.xyz);
-    float coef2 = dot(normalize(interpolated_normal), normalize(diffuse2_light_dir));
+    // diffuse 2
+    vec3 light2_dir = normalize(vec3(light2_position - interpolated_pos.xyz));
+    float coef2 = dot(normal, light2_dir);
     coef2 = clamp(coef2, 0, 1);
-    light_color += diffuse2_light_color * coef2;
+    light_color += light2_color * coef2;
 
+    // specular 1
+    int shininess = 32;
+    float spec_strength = 0.7;
+    vec3 camera_dir1 = normalize(camera_pos - interpolated_pos.xyz);
+    vec3 reflect_dir1 = reflect(-light1_dir, normal);
+    float spec1 = pow(max(dot(camera_dir1, reflect_dir1), 0.0), shininess);
+    vec3 specular1 = spec_strength * spec1 * light1_color;
+    light_color += specular1;
+
+    // specular 2
+    vec3 camera_dir2 = normalize(camera_pos - interpolated_pos.xyz);
+    vec3 reflect_dir2 = reflect(-light2_dir, normal);
+    float spec2 = pow(max(dot(camera_dir2, reflect_dir2), 0.0), shininess);
+    vec3 specular2 = spec_strength * spec2 * light2_color;
+    light_color += specular2;
+
+    // ambient
     light_color += ambient_light_color;
 
 

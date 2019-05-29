@@ -102,10 +102,6 @@ int main()
     //Model obj("../resources/cube/cube.obj");
     //Model obj("../resources/textured-cube/textured-cube.obj");
 
-    // set lights
-    program.set_vec3("light_color", 1.0, 1.0, 1.0);
-    program.set_vec3("light_position", 0.0f, 0.0f, 5.0f);
-
     // main loop
     while(!glfwWindowShouldClose(window))
     {
@@ -127,12 +123,19 @@ int main()
         // set uniforms
         program.set_float("total_time", total_time);
         program.set_float("delta_time", delta_time);
+        // set lights
+        program.set_vec3("ambient_light_color", 0.1f, 0.1f, 0.1f);
+        program.set_vec3("diffuse_light_color", 1.0f, 1.0f, 1.0f);
+        program.set_vec3("diffuse_light_position", 0.0f, 15.0f, 10.0f);
 
         glm::mat4 model = glm::mat4(1.f);
         model = glm::translate(model, glm::vec3(-0.3, -9.f, 0.f));
         model = glm::rotate(model, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
         //model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
         program.set_mat4("model", model);
+        glm::mat4 normal_mat = glm::mat4(1.f);
+        normal_mat = glm::rotate(normal_mat, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
+        program.set_mat4("normal_mat", normal_mat);
 
         glm::mat4 view = glm::lookAt(camera.pos, camera.pos + camera.front, camera.up);
         program.set_mat4("view", view);

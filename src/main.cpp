@@ -125,8 +125,10 @@ int main()
         program.set_float("delta_time", delta_time);
         // set lights
         program.set_vec3("ambient_light_color", 0.1f, 0.1f, 0.1f);
-        program.set_vec3("diffuse_light_color", 1.0f, 1.0f, 1.0f);
-        program.set_vec3("diffuse_light_position", 0.0f, 15.0f, 10.0f);
+        program.set_vec3("diffuse1_light_color", 1.0f, 1.0f, 1.0f);
+        program.set_vec3("diffuse1_light_position", -5.0f, 15.0f, 10.0f);
+        program.set_vec3("diffuse2_light_color", 0.7f, 0.0f, 0.3f);
+        program.set_vec3("diffuse2_light_position", 5.0f, 0.0f, 0.0f);
 
         glm::mat4 model = glm::mat4(1.f);
         model = glm::translate(model, glm::vec3(-0.3, -9.f, 0.f));

@@ -1,9 +1,9 @@
 #version 430
 
+in vec4 interpolated_pos;
+in vec3 interpolated_normal;
 in vec4 interpolated_color;
 in vec2 interpolated_tex_coords;
-in vec4 interpolated_pos;
-in vec4 interpolated_normal;
 
 out vec4 output_color;
 
@@ -18,7 +18,7 @@ void main()
 {
     // light computation
     vec3 diffuse_light_dir = vec3(diffuse_light_position - interpolated_pos.xyz);
-    float coef = dot(normalize(interpolated_normal.xyz), normalize(diffuse_light_dir));
+    float coef = dot(normalize(interpolated_normal), normalize(diffuse_light_dir));
     coef = clamp(coef, 0, 1);
     vec4 light_color = vec4(diffuse_light_color * coef + ambient_light_color, 1.);
 

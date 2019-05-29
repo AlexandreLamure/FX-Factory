@@ -133,9 +133,6 @@ int main()
         model = glm::rotate(model, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
         //model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
         program.set_mat4("model", model);
-        glm::mat4 normal_mat = glm::mat4(1.f);
-        normal_mat = glm::rotate(normal_mat, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
-        program.set_mat4("normal_mat", normal_mat);
 
         glm::mat4 view = glm::lookAt(camera.pos, camera.pos + camera.front, camera.up);
         program.set_mat4("view", view);

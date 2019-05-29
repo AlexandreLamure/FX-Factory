@@ -12,13 +12,12 @@ out vec2 interpolated_tex_coords;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform mat4 normal_mat;
 
 
 void main()
 {
     interpolated_pos = model * vec4(position, 1);
-    interpolated_normal = normal_mat * vec4(normal, 1);
+    interpolated_normal = model * vec4(normal, 0); // we only keep the rotations by setting w to 0
 
 
     gl_Position = projection * view * interpolated_pos;

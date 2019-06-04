@@ -69,29 +69,44 @@ void main()
     vec4 texel1 = texture(texture_diffuse1, interpolated_tex_coords);
     vec4 texel2 = texture(texture_diffuse1, interpolated_tex_coords_glitch);
     vec4 texel3 = texture(texture_diffuse1, interpolated_tex_coords_glitch2);
-    vec4 texel = mix(texel1, texel3, 0.5);
+    vec4 texel = texel1;//mix(texel1, texel3, 0.5);
 
     vec4 glitch_color = vec4(0);
-    if (mesh_id % 2 == int(total_time) % 2 &&
-        (int((8 + cos(3.14 * total_time) * 5) * cos(0.1 * fract(interpolated_normal.y * interpolated_pos.z)))
-        == int((3 + sin(total_time) * 5) * sin(interpolated_pos.z * 2*int(int(total_time) % 2 == int(interpolated_tex_coords.y) % 2)))))
+    if (rand % 11 == rand % 13 && // rate
+    int((mesh_id + 10) * fract(total_time)) == int((mesh_id + 10) * sin(total_time)))
     {
         glitch_color = 1.0 * interpolated_pos * cos(total_time);
-        glitch_color.r *= interpolated_tex_coords_glitch.y;
-        glitch_color.b *= interpolated_tex_coords_glitch.x;
+        glitch_color.g += cos(rand);
+        glitch_color.b *= rand;
     }
 
     vec4 glitch_color2 = vec4(0);
     if (mesh_id % 2 == int(total_time) % 2 &&
-    (int((8 + cos(3.14 * total_time) * 5)))
-    == int((7 + sin(2 * total_time) * 5)))
+        (int((8 + cos(3.14 * total_time) * 5) * cos(0.1 * fract(interpolated_normal.y * interpolated_pos.z)))
+        == int((3 + sin(total_time) * 5) * sin(interpolated_pos.z * 3*int(int(total_time) % 2 == int(interpolated_tex_coords.y) % 2)))))
     {
-        glitch_color2 = 1.0 * interpolated_pos * cos(total_time);
-        glitch_color2.r *= interpolated_tex_coords_glitch.y;
-        glitch_color2.b *= interpolated_tex_coords_glitch.x;
+        glitch_color2 = 1.0 * interpolated_pos * sin(total_time);
+        glitch_color2.r *= fract(total_time);
+        glitch_color2.b *= cos(rand);
     }
 
+    vec4 glitch_color3 = vec4(0);
+    if (rand % 20 == rand % 18 && // rate
+        mesh_id % 15 == rand % 15 && // target mesh
+        ((rand % 3 == 0 && int(fract(interpolated_pos.x*rand)) % 8 == int(total_time) % 2) ||
+         (rand % 3 == 1 && int(fract(interpolated_pos.y*rand)) % 8 == int(total_time) % 2) ||
+         (rand % 3 == 2 && int(fract(interpolated_pos.z*rand)) % 8 == int(total_time) % 2))
+        )
+    {
+        glitch_color3 = 1.0 * interpolated_pos * cos(total_time);
+        glitch_color3.r += 1;
+        glitch_color3.b *= fract(total_time);
+    }
+
+
+
     output_color = vec4(light_color, 1) * texel;
-    output_color += glitch_color2;
-    output_color -= glitch_color;
+    //output_color += glitch_color;
+    output_color -= glitch_color2;
+    //output_color -= glitch_color3;
 }

@@ -81,13 +81,12 @@ void main()
     }
 
     vec4 glitch_color2 = vec4(0);
-    if (mesh_id % 2 == int(total_time) % 2 &&
-        (int((8 + cos(3.14 * total_time) * 5) * cos(0.1 * fract(interpolated_normal.y * interpolated_pos.z)))
-        == int((3 + sin(total_time) * 5) * sin(interpolated_pos.z * 3*int(int(total_time) % 2 == int(interpolated_tex_coords.y) % 2)))))
+    if (mesh_id % 10 == int(total_time) % 7 &&
+        (int(6*cos(interpolated_normal.y + cos(0.1*total_time))) == int((6.1 + 0.05 * cos(total_time))*sin(interpolated_normal.z))))
     {
         glitch_color2 = 1.0 * interpolated_pos * sin(total_time);
-        glitch_color2.r *= fract(total_time);
-        glitch_color2.b *= cos(rand);
+        glitch_color2.r *= cos(total_time);
+        glitch_color2.b *= fract(total_time);
     }
 
     vec4 glitch_color3 = vec4(0);
@@ -106,7 +105,7 @@ void main()
 
 
     output_color = vec4(light_color, 1) * texel;
-    //output_color += glitch_color;
-    output_color -= glitch_color2;
-    //output_color -= glitch_color3;
+    output_color += glitch_color;
+    //output_color -= glitch_color2;
+    output_color -= glitch_color3;
 }

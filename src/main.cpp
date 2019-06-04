@@ -4,6 +4,7 @@
 #include <cmath>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <ctime>
 
 #include "init.hh"
 #include "program.hh"
@@ -90,6 +91,9 @@ int main()
     float delta_time = 0.f;
     float last_time = 0.f;
 
+    // random
+    std::srand(std::time(nullptr));
+
     GLFWwindow *window = Init::init_all(window_w, window_h);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
@@ -97,6 +101,9 @@ int main()
     Program program("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 
 
+    //Model obj("../resources/animeclassroom/anime school.obj");
+    //Model obj("../resources/secret-zoo-level-textured/secret-zoo-level-textured.obj");
+    //Model obj("../resources/trees-and-rocks/trees-and-rocks.obj");
     Model obj("../resources/varia-suit/DolBarriersuit.obj");
     //Model obj("../resources/crysis-nano-suit-2/nanosuit.obj");
     //Model obj("../resources/cube/cube.obj");
@@ -123,17 +130,27 @@ int main()
         // set uniforms
         program.set_float("total_time", total_time);
         program.set_float("delta_time", delta_time);
+        // set random
+        program.set_int("rand", std::rand() % 100);
         // set lights
         program.set_vec3("ambient_light_color", 0.1f, 0.1f, 0.1f);
         program.set_vec3("light1_color", 1.0f, 1.0f, 1.0f);
         program.set_vec3("light1_position", -5.0f, 15.0f, 10.0f);
-        program.set_vec3("light2_color", 0.7f, 0.0f, 0.3f);
-        program.set_vec3("light2_position", 5.0f, 0.0f, 0.0f);
+        program.set_vec3("light2_color", 0.8f, 0.0f, 0.3f);
+        program.set_vec3("light2_position", 5.0f, 0.0f, 2.0f);
         program.set_vec3("camera_pos", camera.pos);
 
         glm::mat4 model = glm::mat4(1.f);
+        //for samus
         model = glm::translate(model, glm::vec3(-0.3, -9.f, 0.f));
         model = glm::rotate(model, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
+        //model = glm::scale(model, glm::vec3(0.04f, 0.04f, 0.04f));
+        // for classroom
+        //model = glm::translate(model, glm::vec3(-1.f, -3.f, 13.f));
+        //model = glm::rotate(model, glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f));
+        // for zoo level
+        //model = glm::translate(model, glm::vec3(-1.f, -3.f, 13.f));
+        //model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
         //model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
         program.set_mat4("model", model);
 

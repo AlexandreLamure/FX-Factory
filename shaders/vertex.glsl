@@ -12,11 +12,17 @@ out vec2 interpolated_tex_coords;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform int mesh_id;
+uniform float total_time;
+
 
 
 void main()
 {
     interpolated_pos = model * vec4(position, 1);
+    /*if (int(mesh_id) % 3 == int(total_time) % 2 &&
+        int(interpolated_pos.y) % 10 < 5)
+        interpolated_pos.x += 2;*/
     interpolated_normal = mat3(transpose(inverse(model))) * normal; // we only keep the scale and rotations from model matrix
 
 

@@ -14,15 +14,29 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform int mesh_id;
 uniform float total_time;
+uniform int rand;
 
 
 
 void main()
 {
-    interpolated_pos = model * vec4(position, 1);
-    /*if (int(mesh_id) % 3 == int(total_time) % 2 &&
-        int(interpolated_pos.y) % 10 < 5)
-        interpolated_pos.x += 2;*/
+    vec3 position_glitch = position;
+    float glitch_intensity = 0.007;
+    if (rand % 50 == int(total_time) % 50)
+    {
+        if (int(10*position.y) % 3 == 0)
+        {
+            position_glitch.x += glitch_intensity * rand;
+            position_glitch.y -= glitch_intensity * rand;
+        }
+        else if (int(10*position.y) % 3 == 1)
+            position_glitch.x -= glitch_intensity * rand;
+    }
+    /*if (int(10*position.y) % 3 == 0)
+    {
+        position_glitch.x += 2;
+    }*/
+    interpolated_pos = model * vec4(position_glitch, 1);
     interpolated_normal = mat3(transpose(inverse(model))) * normal; // we only keep the scale and rotations from model matrix
 
 

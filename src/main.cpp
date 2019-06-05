@@ -101,10 +101,10 @@ int main()
     Program program("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 
 
-    //Model obj("../resources/animeclassroom/anime school.obj");
+    Model obj("../resources/animeclassroom/anime school.obj");
     //Model obj("../resources/secret-zoo-level-textured/secret-zoo-level-textured.obj");
     //Model obj("../resources/trees-and-rocks/trees-and-rocks.obj");
-    Model obj("../resources/varia-suit/DolBarriersuit.obj");
+    //Model obj("../resources/varia-suit/DolBarriersuit.obj");
     //Model obj("../resources/crysis-nano-suit-2/nanosuit.obj");
     //Model obj("../resources/cube/cube.obj");
     //Model obj("../resources/textured-cube/textured-cube.obj");
@@ -142,12 +142,11 @@ int main()
 
         glm::mat4 model = glm::mat4(1.f);
         //for samus
-        model = glm::translate(model, glm::vec3(-0.3, -9.f, 0.f));
-        model = glm::rotate(model, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
-        //model = glm::scale(model, glm::vec3(0.04f, 0.04f, 0.04f));
+        //model = glm::translate(model, glm::vec3(-0.3, -9.f, 0.f));
+        //model = glm::rotate(model, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
         // for classroom
-        //model = glm::translate(model, glm::vec3(-1.f, -3.f, 13.f));
-        //model = glm::rotate(model, glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f));
+        model = glm::translate(model, glm::vec3(-1.f, -3.f, 13.f));
+        model = glm::rotate(model, glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f));
         // for zoo level
         //model = glm::translate(model, glm::vec3(-1.f, -3.f, 13.f));
         //model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));

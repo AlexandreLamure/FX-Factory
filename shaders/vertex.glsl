@@ -21,7 +21,7 @@ uniform int rand;
 void main()
 {
     vec3 position_glitch = position;
-    float glitch_intensity = 0.007;
+    float glitch_intensity = 0.002;
     if (rand % 50 == int(total_time) % 50)
     {
         if (int(10*position.y) % 3 == 0)

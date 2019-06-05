@@ -105,7 +105,7 @@ void main()
 
 
     output_color = vec4(light_color, 1) * texel;
-    //output_color += glitch_color;
-    //output_color -= glitch_color2;
-    //output_color -= glitch_color3;
+    output_color += glitch_color;
+    output_color -= glitch_color2;
+    output_color -= glitch_color3;
 }

@@ -32,10 +32,11 @@ void main()
         else if (int(10*position.y) % 3 == 1)
             position_glitch.x -= glitch_intensity * rand;
     }
-    /*if (int(10*position.y) % 3 == 0)
+    if (abs(cos(total_time)) < 0.13
+        && mesh_id % 100 == rand)
     {
-        position_glitch.x += 2;
-    }*/
+        position_glitch *= 1.08;
+    }
     interpolated_pos = model * vec4(position_glitch, 1);
     interpolated_normal = mat3(transpose(inverse(model))) * normal; // we only keep the scale and rotations from model matrix
 

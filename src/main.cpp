@@ -101,13 +101,9 @@ int main()
     Program program("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 
 
-    Model obj("../resources/animeclassroom/anime school.obj");
-    //Model obj("../resources/secret-zoo-level-textured/secret-zoo-level-textured.obj");
-    //Model obj("../resources/trees-and-rocks/trees-and-rocks.obj");
-    //Model obj("../resources/varia-suit/DolBarriersuit.obj");
-    //Model obj("../resources/crysis-nano-suit-2/nanosuit.obj");
-    //Model obj("../resources/cube/cube.obj");
-    //Model obj("../resources/textured-cube/textured-cube.obj");
+    Model obj1("../resources/varia-suit/DolBarriersuit.obj");
+    //Model obj("../resources/varia-suit/dol2.obj");
+    Model obj2("../resources/animeclassroom/anime school.obj");
 
     // main loop
     while(!glfwWindowShouldClose(window))
@@ -140,19 +136,6 @@ int main()
         program.set_vec3("light2_position", 5.0f, 0.0f, 2.0f);
         program.set_vec3("camera_pos", camera.pos);
 
-        glm::mat4 model = glm::mat4(1.f);
-        //for samus
-        //model = glm::translate(model, glm::vec3(-0.3, -9.f, 0.f));
-        //model = glm::rotate(model, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
-        // for classroom
-        model = glm::translate(model, glm::vec3(-1.f, -3.f, 13.f));
-        model = glm::rotate(model, glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f));
-        // for zoo level
-        //model = glm::translate(model, glm::vec3(-1.f, -3.f, 13.f));
-        //model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
-        //model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
-        program.set_mat4("model", model);
-
         glm::mat4 view = glm::lookAt(camera.pos, camera.pos + camera.front, camera.up);
         program.set_mat4("view", view);
 
@@ -160,8 +143,19 @@ int main()
         program.set_mat4("projection", projection);
 
 
-        obj.draw(program);
+        // samus
+        glm::mat4 model = glm::mat4(1.f);
+        model = glm::translate(model, glm::vec3(-0.3, -9.f, 0.f));
+        model = glm::rotate(model, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
+        program.set_mat4("model", model);
+        obj1.draw(program);
 
+        // background
+        model = glm::mat4(1.f);
+        model = glm::translate(model, glm::vec3(-5.f, -3.f, 18.f));
+        model = glm::rotate(model, glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f));
+        program.set_mat4("model", model);
+        obj2.draw(program);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

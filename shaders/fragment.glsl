@@ -19,6 +19,14 @@ uniform vec3 camera_pos;
 uniform int mesh_id;
 uniform int rand;
 
+bool glitch_trigger(float rate, float param1, float param2, float param3)
+{
+    return ((cos(total_time * rate) * sin(rand * rate * param1 / param2) * sin(param2 * param3) + (fract(param1 * rand) * rand + cos(param2 * param3 / param1) * rand) / (rand * int(total_time) % 10))
+           + float(int(param1 * param2 * param3 + (rand / 20)) % 100) / 100 > 0.)
+            && cos(total_time * rate) > 0.5
+            && abs(int(sin(total_time * rate) * 20)) == rand % 20;
+}
+
 void main()
 {
     vec2 interpolated_tex_coords_glitch = vec2(interpolated_tex_coords.x + 0.1 * total_time,
@@ -111,7 +119,7 @@ void main()
 
 
     // rgb splitting
-    vec2 dir = interpolated_tex_coords - vec2( .5 );
+    /*vec2 dir = interpolated_tex_coords - vec2( .5 );
     float d = .7 * length(dir) + rand * 0.01;
     normalize(dir);
     vec2 value = d * dir * (cos(total_time) * float(rand == rand % 10));
@@ -121,5 +129,16 @@ void main()
     vec4 c3 = texture2D(texture_diffuse1, interpolated_tex_coords + value);
     vec4 tex_color = vec4(c1.r, c2.g, c3.b, c1.a + c2.a + c3.a);
     output_color = vec4(light_color, 1) * tex_color;
+    */
 
+
+    vec4 glitch_color4 = vec4(0);
+    if (glitch_trigger(20, mesh_id, interpolated_pos.x, interpolated_normal.y))
+    {
+        glitch_color4.g = cos(total_time);
+        glitch_color4.r += 1;
+        glitch_color4.b *= fract(total_time);
+    }
+    output_color = vec4(light_color, 1) * texel;
+    output_color += glitch_color4;
 }

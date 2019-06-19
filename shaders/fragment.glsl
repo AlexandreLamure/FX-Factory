@@ -108,4 +108,18 @@ void main()
     output_color += glitch_color;
     output_color -= glitch_color2;
     output_color -= glitch_color3;
+
+
+    // rgb splitting
+    vec2 dir = interpolated_tex_coords - vec2( .5 );
+    float d = .7 * length(dir) + rand * 0.01;
+    normalize(dir);
+    vec2 value = d * dir * (cos(total_time) * float(rand == rand % 10));
+
+    vec4 c1 = texture2D(texture_diffuse1, interpolated_tex_coords - value);
+    vec4 c2 = texture2D(texture_diffuse1, interpolated_tex_coords);
+    vec4 c3 = texture2D(texture_diffuse1, interpolated_tex_coords + value);
+    vec4 tex_color = vec4(c1.r, c2.g, c3.b, c1.a + c2.a + c3.a);
+    output_color = vec4(light_color, 1) * tex_color;
+
 }

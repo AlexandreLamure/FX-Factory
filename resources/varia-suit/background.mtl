@@ -1,5 +1,5 @@
 # Blender MTL File: 'None'
-# Material Count: 3
+# Material Count: 4
 
 newmtl None
 Ns 0.000000
@@ -12,6 +12,17 @@ d 1.000000
 illum 2
 
 newmtl None_background.png
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ground.jpg
+
+newmtl None_background.png_background.png
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000

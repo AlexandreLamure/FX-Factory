@@ -101,9 +101,9 @@ int main()
     Program program("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 
 
-    Model obj1("../resources/varia-suit/DolBarriersuit.obj");
-    //Model obj("../resources/varia-suit/dol2.obj");
-    Model obj2("../resources/animeclassroom/anime school.obj");
+    Model samus("../resources/varia-suit/DolBarriersuit.obj");
+    //Model classroom("../resources/animeclassroom/anime school.obj");
+    Model background("../resources/varia-suit/background.obj");
 
     // main loop
     while(!glfwWindowShouldClose(window))
@@ -145,17 +145,23 @@ int main()
 
         // samus
         glm::mat4 model = glm::mat4(1.f);
-        model = glm::translate(model, glm::vec3(-0.3, -9.f, 0.f));
+        model = glm::translate(model, glm::vec3(-0.3, -10.f, -3.f));
         model = glm::rotate(model, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
         program.set_mat4("model", model);
-        obj1.draw(program);
+        samus.draw(program);
 
         // background
         model = glm::mat4(1.f);
+        model = glm::translate(model, glm::vec3(-0.3, -10.f, -3.f));
+        program.set_mat4("model", model);
+        background.draw(program);
+
+        // classroom
+        /*model = glm::mat4(1.f);
         model = glm::translate(model, glm::vec3(-5.f, -3.f, 18.f));
         model = glm::rotate(model, glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f));
         program.set_mat4("model", model);
-        obj2.draw(program);
+        classroom.draw(program);*/
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

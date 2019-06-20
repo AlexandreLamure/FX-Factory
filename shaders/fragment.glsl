@@ -132,6 +132,7 @@ void main()
     */
 
 
+    /*
     vec4 glitch_color4 = vec4(0);
     if (glitch_trigger(20, mesh_id, interpolated_pos.x, interpolated_normal.y))
     {
@@ -140,5 +141,5 @@ void main()
         glitch_color4.b *= fract(total_time);
     }
     output_color = vec4(light_color, 1) * texel;
-    output_color += glitch_color4;
+    output_color += glitch_color4;*/
 }

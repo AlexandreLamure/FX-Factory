@@ -98,8 +98,7 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
-    Program program("../shaders/vertex.glsl", "../shaders/fragment.glsl");
-
+    Program program("../shaders/vertex/basic.glsl", "../shaders/fragment/old-video.glsl");
 
     Model samus("../resources/varia-suit/DolBarriersuit.obj");
     //Model classroom("../resources/animeclassroom/anime school.obj");
@@ -126,13 +125,14 @@ int main()
         // set uniforms
         program.set_float("total_time", total_time);
         program.set_float("delta_time", delta_time);
+        program.set_vec2("resolution", window_w, window_h);
         // set random
         program.set_int("rand", std::rand() % 100);
         // set lights
         program.set_vec3("ambient_light_color", 0.1f, 0.1f, 0.1f);
         program.set_vec3("light1_color", 1.0f, 1.0f, 1.0f);
         program.set_vec3("light1_position", -5.0f, 15.0f, 10.0f);
-        program.set_vec3("light2_color", 0.8f, 0.0f, 0.3f);
+        program.set_vec3("light2_color", 0.8f, 0.0f + (cos(total_time)), 0.3f);
         program.set_vec3("light2_position", 5.0f, 0.0f, 2.0f);
         program.set_vec3("camera_pos", camera.pos);
 

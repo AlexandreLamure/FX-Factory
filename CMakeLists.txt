@@ -12,13 +12,13 @@ add_executable(openGL_Glitch
                src/camera.cc src/camera.hh
                src/main.cpp)
 
-
 #OpenGL
 find_package(OpenGL REQUIRED)
 
 # GLFW
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLFW REQUIRED glfw3)
+set(GLFW_LIBRARIES_FIX "-lX11 -lpthread") # should be already included in GLFW_LIBRARIES
 
 # GLAD
 add_library(GLAD lib/glad/src/glad.c)
@@ -31,4 +31,4 @@ find_package(assimp REQUIRED)
 
 include_directories(${OPENGL_INCLUDE_DIRS} ${GLFW_INCLUDE_DIRS})
 
-target_link_libraries(openGL_Glitch ${OPENGL_LIBRARIES} ${GLFW_LIBRARIES} GLAD ${CMAKE_DL_LIBS} assimp)
+target_link_libraries(openGL_Glitch ${OPENGL_LIBRARIES} ${GLFW_LIBRARIES} ${GLFW_LIBRARIES_FIX} GLAD ${CMAKE_DL_LIBS} assimp)

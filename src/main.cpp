@@ -98,11 +98,60 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
-    Program program("../shaders/vertex/basic.glsl", "../shaders/fragment/old-video.glsl");
+    Program program("../shaders/vertex/basic.glsl", "../shaders/fragment/basic.glsl");
+    Program screen_program("../shaders/vertex/screen/basic.glsl", "../shaders/fragment/screen/old-video.glsl");
 
     Model samus("../resources/varia-suit/DolBarriersuit.obj");
     //Model classroom("../resources/animeclassroom/anime school.obj");
     Model background("../resources/varia-suit/background.obj");
+
+    // screen quad
+    float quad_vertices[] = {
+            // positions
+            -1.0f,  1.0f,  0.0f, 1.0f,
+            -1.0f, -1.0f,  0.0f, 0.0f,
+            1.0f, -1.0f,  1.0f, 0.0f,
+            /* texCoords */
+            -1.0f,  1.0f,  0.0f, 1.0f,
+            1.0f, -1.0f,  1.0f, 0.0f,
+            1.0f,  1.0f,  1.0f, 1.0f
+    };
+    // screen quad VAO
+    unsigned int quadVAO;
+    unsigned int quadVBO;
+    glGenVertexArrays(1, &quadVAO);
+    glGenBuffers(1, &quadVBO);
+    glBindVertexArray(quadVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), &quad_vertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+    // framebuffer configuration
+    // -------------------------
+    unsigned int frame_buffer;
+    glGenFramebuffers(1, &frame_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+    // create a color attachment texture
+    unsigned int texture_color_buffer;
+    glGenTextures(1, &texture_color_buffer);
+    glBindTexture(GL_TEXTURE_2D, texture_color_buffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, window_w, window_h, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture_color_buffer, 0);
+    // create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+    unsigned int rbo;
+    glGenRenderbuffers(1, &rbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, window_w, window_h); // use a single renderbuffer object for both a depth AND stencil buffer.
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
+    // now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        std::cerr << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // main loop
     while(!glfwWindowShouldClose(window))
@@ -116,10 +165,11 @@ int main()
         process_input(window, delta_time);
 
         // render
+        glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer); // draw scene to color texture
+        glEnable(GL_DEPTH_TEST);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // draw our first triangle
         glUseProgram(program.program_id);
 
         // set uniforms
@@ -163,6 +213,27 @@ int main()
         program.set_mat4("model", model);
         classroom.draw(program);*/
 
+
+
+        // draw a quad with the framebuffer color texture
+        glBindFramebuffer(GL_FRAMEBUFFER, 0); // bind back to default framebuffer
+        glDisable(GL_DEPTH_TEST);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(screen_program.program_id);
+
+        screen_program.set_int("screen_texture", 0);
+        program.set_float("total_time", total_time);
+        program.set_float("delta_time", delta_time);
+        program.set_vec2("resolution", window_w, window_h);
+        screen_program.set_int("rand", std::rand() % 100);
+
+        glBindVertexArray(quadVAO);
+        glBindTexture(GL_TEXTURE_2D, texture_color_buffer);	// use the color attachment texture as the texture of the quad plane
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
@@ -172,6 +243,8 @@ int main()
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
+    glDeleteVertexArrays(1, &quadVAO);
+    glDeleteBuffers(1, &quadVBO);
     glfwTerminate();
 
     return 0;

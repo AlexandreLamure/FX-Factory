@@ -99,7 +99,7 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
 
     Program program("../shaders/vertex/basic.glsl", "../shaders/fragment/basic.glsl");
-    Program screen_program("../shaders/vertex/screen/basic.glsl", "../shaders/fragment/screen/old-video.glsl");
+    Program screen_program("../shaders/vertex/screen/basic.glsl", "../shaders/fragment/screen/distortion.glsl");
 
     Model samus("../resources/varia-suit/DolBarriersuit.obj");
     //Model classroom("../resources/animeclassroom/anime school.obj");
@@ -224,9 +224,9 @@ int main()
         glUseProgram(screen_program.program_id);
 
         screen_program.set_int("screen_texture", 0);
-        program.set_float("total_time", total_time);
-        program.set_float("delta_time", delta_time);
-        program.set_vec2("resolution", window_w, window_h);
+        screen_program.set_float("total_time", total_time);
+        screen_program.set_float("delta_time", delta_time);
+        screen_program.set_vec2("resolution", window_w, window_h);
         screen_program.set_int("rand", std::rand() % 100);
 
         glBindVertexArray(quadVAO);

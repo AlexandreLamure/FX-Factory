@@ -25,6 +25,7 @@ public:
 
     float last_mouse_x;
     float last_mouse_y;
+    glm::vec2 mouse_pos;
 
     bool first_mouse_move; // to handle the big jump on the first mouse movement
 

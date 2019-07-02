@@ -16,6 +16,9 @@ Camera camera;
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+    camera.mouse_pos.x = xpos;
+    camera.mouse_pos.y = ypos;
+
     if (camera.first_mouse_move)
     {
         camera.last_mouse_x = xpos;
@@ -98,8 +101,12 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
-    Program program("../shaders/vertex/basic.glsl", "../shaders/fragment/basic.glsl");
-    Program screen_program("../shaders/vertex/screen/basic.glsl", "../shaders/fragment/screen/distortion.glsl");
+    auto vertex_paths = std::vector<const char*>{"../shaders/vertex/basic.glsl"};
+    auto fragment_paths = std::vector<const char*>{"../shaders/fragment/compute-lights.glsl", "../shaders/fragment/basic.glsl"};
+    Program program(vertex_paths, fragment_paths);
+    auto screen_vertex_paths = std::vector<const char*>{"../shaders/vertex/screen/basic.glsl"};
+    auto screen_fragment_paths = std::vector<const char*>{"../shaders/fragment/screen/basic.glsl"};
+    Program screen_program(screen_vertex_paths, screen_fragment_paths);
 
     Model samus("../resources/varia-suit/DolBarriersuit.obj");
     //Model classroom("../resources/animeclassroom/anime school.obj");
@@ -227,6 +234,7 @@ int main()
         screen_program.set_float("total_time", total_time);
         screen_program.set_float("delta_time", delta_time);
         screen_program.set_vec2("resolution", window_w, window_h);
+        screen_program.set_vec2("mouse_pos", camera.mouse_pos);
         screen_program.set_int("rand", std::rand() % 100);
 
         glBindVertexArray(quadVAO);

@@ -12,17 +12,19 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat2x2.hpp>
+#include <vector>
+
 
 class Program {
 private:
     const char *load(const std::string &filename);
     void compile(GLuint shader, const char *shader_src);
-    void link(GLuint vertex_shader, GLuint fragment_shader);
+    void link(const std::vector<GLuint>& vertex_shaders, const std::vector<GLuint>& fragment_shaders);
 
 public:
     GLuint program_id;
 
-    Program(const char *vertex_path, const char *fragment_path);
+    Program(const std::vector<const char*>& vertex_paths, const std::vector<const char*>& fragment_paths); // take vectors to allow shaders ''libraries''
 
     void set_bool(const std::string &name, bool value) const;
     void set_int(const std::string &name, int value) const;

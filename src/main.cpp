@@ -105,7 +105,7 @@ int main()
     auto fragment_paths = std::vector<const char*>{"../shaders/fragment/compute-lights.glsl", "../shaders/fragment/basic.glsl"};
     Program program(vertex_paths, fragment_paths);
     auto screen_vertex_paths = std::vector<const char*>{"../shaders/vertex/screen/basic.glsl"};
-    auto screen_fragment_paths = std::vector<const char*>{"../shaders/fragment/screen/basic.glsl"};
+    auto screen_fragment_paths = std::vector<const char*>{"../shaders/fragment/screen/distortion.glsl"};
     Program screen_program(screen_vertex_paths, screen_fragment_paths);
 
     Model samus("../resources/varia-suit/DolBarriersuit.obj");

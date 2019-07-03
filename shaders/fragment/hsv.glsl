@@ -1,35 +1,11 @@
 #version 430
 
-in vec4 interpolated_pos;
-in vec3 interpolated_normal;
-in vec4 interpolated_color;
-in vec2 interpolated_tex_coords;
-
-out vec4 output_color;
-
-uniform sampler2D texture_diffuse1;
-uniform vec3 ambient_light_color;
-uniform vec3 light1_color;
-uniform vec3 light1_position;
-uniform vec3 light2_color;
-uniform vec3 light2_position;
-uniform vec3 camera_pos;
-
-
-vec3 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
-                    vec3 camera_pos,
-                    vec3 ambient_light_color,
-                    vec3 light1_color, vec3 light1_position,
-                    vec3 light2_color, vec3 light2_position);
-
-#define PI = 3.1415926535;
-
-#define HueLevCount 20
-#define SatLevCount 7
-#define ValLevCount 4
-float[HueLevCount] HueLevels = float[] (0, 18, 36, 54, 72, 90, 108, 126, 144, 162, 180, 198, 216, 234, 252, 270, 288, 306, 324, 342);
-float[SatLevCount] SatLevels = float[] (0.0,0.15,0.3,0.45,0.6,0.8,1.0);
-float[ValLevCount] ValLevels = float[] (0.0,0.3,0.6,1.0);
+#define HUE_NB_LEVELS 20
+#define SAT_NB_LEVELS 7
+#define VAL_NB_LEVELS 4
+float[HUE_NB_LEVELS] hue_levels = float[] (0, 18, 36, 54, 72, 90, 108, 126, 144, 162, 180, 198, 216, 234, 252, 270, 288, 306, 324, 342);
+float[SAT_NB_LEVELS] sat_levels = float[] (0.0, 0.15, 0.3, 0.45, 0.6, 0.8, 1.0);
+float[VAL_NB_LEVELS] val_levels = float[] (0.0, 0.3, 0.6, 1.0);
 
 
 vec3 RGBtoHSV(vec3 color)
@@ -136,49 +112,44 @@ vec3 HSVtoRGB(vec3 color)
     return res;
 }
 
-float nearest_level(float col, int mode)
+float nearest_level(float color, int mode)
 {
-    int levCount;
-    if (mode==0) levCount = HueLevCount;
-    if (mode==1) levCount = SatLevCount;
-    if (mode==2) levCount = ValLevCount;
+    int nb_levels;
+    if (mode == 0)
+        nb_levels = HUE_NB_LEVELS;
+    else if (mode == 1)
+        nb_levels = SAT_NB_LEVELS;
+    else if (mode == 2)
+        nb_levels = VAL_NB_LEVELS;
 
-    for (int i = 0; i < levCount-1; i++)
+    for (int i = 0; i < nb_levels-1; i++)
     {
-        if (mode==0)
+        if (mode == 0)
         {
-            if (col >= HueLevels[i] && col <= HueLevels[i+1])
-            return HueLevels[i+1];
+            if (color >= hue_levels[i] && color <= hue_levels[i+1])
+            return hue_levels[i+1];
         }
-        else if (mode==1)
+        else if (mode == 1)
         {
-            if (col >= SatLevels[i] && col <= SatLevels[i+1])
-            return SatLevels[i+1];
+            if (color >= sat_levels[i] && color <= sat_levels[i+1])
+            return sat_levels[i+1];
         }
-        else if (mode==2)
+        else if (mode == 2)
         {
-            if (col >= ValLevels[i] && col <= ValLevels[i+1])
-            return ValLevels[i+1];
+            if (color >= val_levels[i] && color <= val_levels[i+1])
+            return val_levels[i+1];
         }
     }
     return 0;
 }
 
 
-void main()
+vec4 toonify(vec4 color_org)
 {
-    vec3 light_color = compute_lights(interpolated_pos, interpolated_normal,
-                                      camera_pos,
-                                      ambient_light_color,
-                                      light1_color, light1_position,
-                                      light2_color, light2_position);
-    vec2 uv = interpolated_tex_coords.xy;
-
-    vec3 color_org = texture(texture_diffuse1, uv).rgb * light_color;
-    vec3 vHSV =  RGBtoHSV(color_org);
+    vec3 vHSV =  RGBtoHSV(color_org.rgb);
     vHSV.x = nearest_level(vHSV.x, 0);
     vHSV.y = nearest_level(vHSV.y, 1);
     vHSV.z = nearest_level(vHSV.z, 2);
 
-    output_color = vec4(HSVtoRGB(vHSV), 1);
+    return vec4(HSVtoRGB(vHSV), color_org.a);
 }

@@ -32,9 +32,6 @@ float[SatLevCount] SatLevels = float[] (0.0,0.15,0.3,0.45,0.6,0.8,1.0);
 float[ValLevCount] ValLevels = float[] (0.0,0.3,0.6,1.0);
 
 
-
-
-
 vec3 RGBtoHSV(vec3 color)
 {
     float r = color.r;
@@ -167,6 +164,7 @@ float nearest_level(float col, int mode)
     return 0;
 }
 
+
 void main()
 {
     vec3 light_color = compute_lights(interpolated_pos, interpolated_normal,
@@ -182,7 +180,5 @@ void main()
     vHSV.y = nearest_level(vHSV.y, 1);
     vHSV.z = nearest_level(vHSV.z, 2);
 
-    vec3 vRGB = HSVtoRGB(vHSV);
-
-    output_color = vec4(vRGB, 1);
+    output_color = vec4(HSVtoRGB(vHSV), 1);
 }

@@ -102,10 +102,10 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
 
     auto vertex_paths = std::vector<const char*>{"../shaders/vertex/basic.glsl"};
-    auto fragment_paths = std::vector<const char*>{"../shaders/fragment/compute-lights.glsl", "../shaders/fragment/basic.glsl"};
+    auto fragment_paths = std::vector<const char*>{"../shaders/fragment/compute-lights.glsl", "../shaders/fragment/hsv.glsl"};
     Program program(vertex_paths, fragment_paths);
     auto screen_vertex_paths = std::vector<const char*>{"../shaders/vertex/screen/basic.glsl"};
-    auto screen_fragment_paths = std::vector<const char*>{"../shaders/fragment/screen/distortion.glsl"};
+    auto screen_fragment_paths = std::vector<const char*>{"../shaders/fragment/screen/basic.glsl"};
     Program screen_program(screen_vertex_paths, screen_fragment_paths);
 
     Model samus("../resources/varia-suit/DolBarriersuit.obj");
@@ -214,7 +214,7 @@ int main()
         background.draw(program);
 
         // classroom
-        /*model = glm::mat4(1.f);
+        /*glm::mat4 model = glm::mat4(1.f);
         model = glm::translate(model, glm::vec3(-5.f, -3.f, 18.f));
         model = glm::rotate(model, glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f));
         program.set_mat4("model", model);

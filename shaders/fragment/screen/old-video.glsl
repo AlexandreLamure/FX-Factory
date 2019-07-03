@@ -1,6 +1,6 @@
 #version 430
 
-//#define BLACK_AND_WHITE
+//#define BLACK_AND_WHITE  // FIXME: make it a line that goes down the screen
 #define LINES_AND_FLICKER
 #define BLOTCHES
 #define GRAIN

@@ -102,7 +102,14 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
 
     auto vertex_paths = std::vector<const char*>{"../shaders/vertex/basic.glsl"};
-    auto fragment_paths = std::vector<const char*>{"../shaders/fragment/compute-lights.glsl", "../shaders/fragment/hsv.glsl"};
+    auto fragment_paths = std::vector<const char*>{"../shaders/fragment/compute-lights.glsl",
+                                                   "../shaders/fragment/tex-move.glsl",
+                                                   "../shaders/fragment/colorize.glsl",
+                                                   "../shaders/fragment/tex-rgb-split.glsl",
+                                                   "../shaders/fragment/edge.glsl",
+                                                   "../shaders/fragment/hsv.glsl",
+                                                   "../shaders/fragment/horror.glsl",
+                                                   "../shaders/fragment/all.glsl"};
     Program program(vertex_paths, fragment_paths);
     auto screen_vertex_paths = std::vector<const char*>{"../shaders/vertex/screen/basic.glsl"};
     auto screen_fragment_paths = std::vector<const char*>{"../shaders/fragment/screen/basic.glsl"};

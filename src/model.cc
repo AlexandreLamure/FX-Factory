@@ -44,7 +44,7 @@ Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene)
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;
 
-    // process vertex positions, normals and texture coordinates
+    // copy vertex positions, normals and texture coordinates
     for(unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
         Vertex vertex;
@@ -98,12 +98,12 @@ std::vector<Texture> Model::load_material_textures(aiMaterial *mat, aiTextureTyp
     std::vector<Texture> textures;
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++)
     {
-        aiString str;
-        mat->GetTexture(type, i, &str);
+        aiString path;
+        mat->GetTexture(type, i, &path);
         bool skip = false;
         for(unsigned int j = 0; j < textures_loaded.size(); j++)
         {
-            if(std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
+            if(std::strcmp(textures_loaded[j].path.data(), path.C_Str()) == 0)
             {
                 textures.push_back(textures_loaded[j]);
                 skip = true;
@@ -113,9 +113,9 @@ std::vector<Texture> Model::load_material_textures(aiMaterial *mat, aiTextureTyp
         if(!skip)
         {   // if texture hasn't been loaded already, load it
             Texture texture;
-            texture.id = texture_from_file(str.C_Str(), directory);
+            texture.id = texture_from_file(path.C_Str(), directory);
             texture.type = type_name;
-            texture.path = str.C_Str();
+            texture.path = path.C_Str();
             textures.push_back(texture);
             textures_loaded.push_back(texture); // add to loaded textures
         }

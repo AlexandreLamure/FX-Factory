@@ -1,10 +1,11 @@
 #version 430
 
-vec3 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
-                    vec3 camera_pos,
+vec4 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
                     vec3 ambient_light_color,
                     vec3 light1_color, vec3 light1_position,
-                    vec3 light2_color, vec3 light2_position)
+                    vec3 light2_color, vec3 light2_position,
+                    vec3 camera_pos,
+                    vec4 color_org)
 {
     // Light Computation
     vec3 normal = normalize(interpolated_normal);
@@ -40,5 +41,5 @@ vec3 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
     // ambient
     light_color += ambient_light_color;
 
-    return light_color;
+    return vec4(color_org.rgb * light_color, color_org.a);
 }

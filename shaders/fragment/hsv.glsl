@@ -15,6 +15,13 @@ uniform vec3 light2_color;
 uniform vec3 light2_position;
 uniform vec3 camera_pos;
 
+
+vec3 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
+                    vec3 camera_pos,
+                    vec3 ambient_light_color,
+                    vec3 light1_color, vec3 light1_position,
+                    vec3 light2_color, vec3 light2_position);
+
 #define PI = 3.1415926535;
 
 #define HueLevCount 20
@@ -25,11 +32,7 @@ float[SatLevCount] SatLevels = float[] (0.0,0.15,0.3,0.45,0.6,0.8,1.0);
 float[ValLevCount] ValLevels = float[] (0.0,0.3,0.6,1.0);
 
 
-vec3 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
-                    vec3 camera_pos,
-                    vec3 ambient_light_color,
-                    vec3 light1_color, vec3 light1_position,
-                    vec3 light2_color, vec3 light2_position);
+
 
 
 vec3 RGBtoHSV(vec3 color)
@@ -167,10 +170,10 @@ float nearest_level(float col, int mode)
 void main()
 {
     vec3 light_color = compute_lights(interpolated_pos, interpolated_normal,
-                                        camera_pos,
-                                        ambient_light_color,
-                                        light1_color, light1_position,
-                                        light2_color, light2_position);
+                                      camera_pos,
+                                      ambient_light_color,
+                                      light1_color, light1_position,
+                                      light2_color, light2_position);
     vec2 uv = interpolated_tex_coords.xy;
 
     vec3 color_org = texture(texture_diffuse1, uv).rgb * light_color;

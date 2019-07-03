@@ -18,7 +18,25 @@ uniform sampler2D texture_diffuse1;
 uniform vec2 resolution;
 uniform float total_time;
 uniform float delta_time;
+
+uniform vec3 ambient_light_color;
+uniform vec3 light1_color;
+uniform vec3 light1_position;
+uniform vec3 light2_color;
+uniform vec3 light2_position;
+uniform vec3 camera_pos;
+uniform int mesh_id;
 uniform int rand;
+
+
+vec3 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
+                    vec3 camera_pos,
+                    vec3 ambient_light_color,
+                    vec3 light1_color, vec3 light1_position,
+                    vec3 light2_color, vec3 light2_position);
+
+
+
 
 
 vec2 uv;
@@ -71,6 +89,12 @@ float randomBlotch(float seed)
 
 void main(void)
 {
+    vec3 light_color = compute_lights(interpolated_pos, interpolated_normal,
+                                        camera_pos,
+                                        ambient_light_color,
+                                        light1_color, light1_position,
+                                        light2_color, light2_position);
+
     uv = interpolated_tex_coords;//interpolated_pos.xy / resolution.xy;
 
     // Set frequency of global effect to 20 variations per second
@@ -135,4 +159,6 @@ void main(void)
     #ifdef GRAIN
     output_color.xyz *= (1.0+(randf(uv+t*.01)-.2)*.15);
     #endif
+
+    output_color.xyz *= light_color;
 }

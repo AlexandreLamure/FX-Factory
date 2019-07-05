@@ -14,6 +14,7 @@ uniform vec3 light2_color;
 uniform vec3 light2_position;
 
 uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_normal1;
 
 uniform float total_time;
 
@@ -32,7 +33,7 @@ uniform int rand;
 //#define TEX_RGB_SPLIT
 //#define EDGE_ENHANCE
 //#define TOONIFY
-//#define HORRORIFY
+#define HORRORIFY
 
 
 vec4 tex_move_glitch(vec2 uv,
@@ -68,7 +69,7 @@ vec4 toonify(vec4 color_org);
 vec4 horrorify(vec2 uv,
                sampler2D texture_diffuse1,
                float total_time,
-               int rand,
+               int mesh_id, int rand,
                vec4 color_org, bool colorize);
 
 
@@ -147,7 +148,7 @@ void main()
     output_color = horrorify(uv,
                              texture_diffuse1,
                              total_time,
-                             rand,
+                             mesh_id, rand,
                              output_color, true);
     #endif
 

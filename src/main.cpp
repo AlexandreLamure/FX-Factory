@@ -115,10 +115,10 @@ int main()
     auto screen_fragment_paths = std::vector<const char*>{"../shaders/fragment/screen/basic.glsl"};
     Program screen_program(screen_vertex_paths, screen_fragment_paths);
 
-    //Model samus("../resources/varia-suit/DolBarriersuit.obj");
-    //Model background("../resources/varia-suit/background.obj");
+    Model samus("../resources/varia-suit/DolBarriersuit.obj");
+    Model background("../resources/varia-suit/background.obj");
 
-    Model spitfire("../resources/spitfire/SpitFire.obj");
+    //Model spitfire("../resources/spitfire/SpitFire.obj");
     //Model classroom("../resources/animeclassroom/anime school.obj");
 
     // screen quad
@@ -183,7 +183,7 @@ int main()
         // render
         glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer); // draw scene to color texture
         glEnable(GL_DEPTH_TEST);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(program.program_id);
@@ -208,7 +208,7 @@ int main()
         glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)window_w/(float)window_h, 0.1f, 1000.0f);
         program.set_mat4("projection", projection);
 
-/*
+
         // samus
         glm::mat4 model = glm::mat4(1.f);
         model = glm::translate(model, glm::vec3(-0.3, -10.f, -3.f));
@@ -221,14 +221,14 @@ int main()
         model = glm::translate(model, glm::vec3(-0.3, -10.f, -3.f));
         program.set_mat4("model", model);
         background.draw(program);
-*/
 
+/*
         // spitfire
         glm::mat4 model = glm::mat4(1.f);
         model = glm::translate(model, glm::vec3(0., -10.f, -20.f));
         program.set_mat4("model", model);
         spitfire.draw(program);
-
+*/
 
         // classroom
         /*glm::mat4 model = glm::mat4(1.f);

@@ -61,6 +61,8 @@ namespace Init
         // Set OpenGL options
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glEnable(GL_CULL_FACE);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         // tell the size of window to openGL
         glViewport(0, 0, width, height);

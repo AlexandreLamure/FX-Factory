@@ -115,9 +115,11 @@ int main()
     auto screen_fragment_paths = std::vector<const char*>{"../shaders/fragment/screen/basic.glsl"};
     Program screen_program(screen_vertex_paths, screen_fragment_paths);
 
-    Model samus("../resources/varia-suit/DolBarriersuit.obj");
+    //Model samus("../resources/varia-suit/DolBarriersuit.obj");
+    //Model background("../resources/varia-suit/background.obj");
+
+    Model spitfire("../resources/spitfire/SpitFire.obj");
     //Model classroom("../resources/animeclassroom/anime school.obj");
-    Model background("../resources/varia-suit/background.obj");
 
     // screen quad
     float quad_vertices[] = {
@@ -193,7 +195,7 @@ int main()
         // set random
         program.set_int("rand", std::rand() % 100);
         // set lights
-        program.set_vec3("ambient_light_color", 0.1f, 0.1f, 0.1f);
+        program.set_vec3("ambient_light_color", 0.5f, 0.5f, 0.5f);
         program.set_vec3("light1_color", 1.0f, 1.0f, 1.0f);
         program.set_vec3("light1_position", -5.0f, 15.0f, 10.0f);
         program.set_vec3("light2_color", 0.8f, 0.0f + (cos(total_time)), 0.3f);
@@ -203,10 +205,10 @@ int main()
         glm::mat4 view = glm::lookAt(camera.pos, camera.pos + camera.front, camera.up);
         program.set_mat4("view", view);
 
-        glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)window_w/(float)window_h, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)window_w/(float)window_h, 0.1f, 1000.0f);
         program.set_mat4("projection", projection);
 
-
+/*
         // samus
         glm::mat4 model = glm::mat4(1.f);
         model = glm::translate(model, glm::vec3(-0.3, -10.f, -3.f));
@@ -219,6 +221,14 @@ int main()
         model = glm::translate(model, glm::vec3(-0.3, -10.f, -3.f));
         program.set_mat4("model", model);
         background.draw(program);
+*/
+
+        // spitfire
+        glm::mat4 model = glm::mat4(1.f);
+        model = glm::translate(model, glm::vec3(0., -10.f, -20.f));
+        program.set_mat4("model", model);
+        spitfire.draw(program);
+
 
         // classroom
         /*glm::mat4 model = glm::mat4(1.f);

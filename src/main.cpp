@@ -64,7 +64,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 template<typename T>
 void toggle(T& a, T b)
 {
-    std::cout << "TOGGLE" << std::endl;
     a = a & b ? a & ~b : a | b;
 }
 
@@ -76,6 +75,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         toggle<FX_frag>(camera.fx_frag_samus, FX_frag::COMPUTE_LIGHT);
     if (key == GLFW_KEY_B && action == GLFW_PRESS)
         toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_BEFORE);
+    if (key == GLFW_KEY_SEMICOLON && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_MOVE);
+    if (key == GLFW_KEY_G && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_MOVE_GLITCH);
+    if (key == GLFW_KEY_C && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::COLORIZE);
+    if (key == GLFW_KEY_R && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_RGB_SPLIT);
+    if (key == GLFW_KEY_E && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::EDGE_ENHANCE);
+    if (key == GLFW_KEY_T && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TOONIFY);
+    if (key == GLFW_KEY_H && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::HORRORIFY);
+
 }
 
 void process_input(GLFWwindow *window, float delta_time)

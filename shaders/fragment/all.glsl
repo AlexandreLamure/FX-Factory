@@ -26,15 +26,15 @@ uniform int FX;
 
 #define PI = 3.1415926535;
 
-const int UNDEFINED              = 1 << 0; // U
-const int COMPUTE_LIGHT          = 1 << 1; // L
-const int TEX_BEFORE             = 1 << 2; // B
-const int TEX_MOVE               = 1 << 3; // M
-const int TEX_MOVE_GLITCH        = 1 << 4; // G
-const int COLORIZE               = 1 << 5; // C
-const int TEX_RGB_SPLIT          = 1 << 6; // R
-const int EDGE_ENHANCE           = 1 << 7; // E
-const int TOONIFY                = 1 << 8; // T
+const int UNDEFINED              = 1 << 0; // E
+const int COMPUTE_LIGHT          = 1 << 1; // R
+const int TEX_BEFORE             = 1 << 2; // T
+const int TEX_MOVE               = 1 << 3; // Y
+const int TEX_MOVE_GLITCH        = 1 << 4; // U
+const int COLORIZE               = 1 << 5; // I
+const int TEX_RGB_SPLIT          = 1 << 6; // O
+const int EDGE_ENHANCE           = 1 << 7; // P
+const int TOONIFY                = 1 << 8; // G
 const int HORRORIFY              = 1 << 9; // H
 
 

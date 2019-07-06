@@ -14,7 +14,7 @@
 
 
 Camera camera;
-std::vector<FX::FX> FXs;
+FX::FXFactory fx_factory;
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
@@ -71,35 +71,52 @@ void toggle(T& a, T b)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_E && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::UNDEFINED);
-    if (key == GLFW_KEY_R && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::COMPUTE_LIGHT);
-    if (key == GLFW_KEY_T && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_BEFORE);
-    if (key == GLFW_KEY_Y && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_MOVE);
-    if (key == GLFW_KEY_U && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_MOVE_GLITCH);
-    if (key == GLFW_KEY_I && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::COLORIZE);
-    if (key == GLFW_KEY_O && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_RGB_SPLIT);
-    if (key == GLFW_KEY_P && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::EDGE_ENHANCE);
-    if (key == GLFW_KEY_G && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TOONIFY);
-    if (key == GLFW_KEY_H && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::HORRORIFY);
+    // Change selected model
+    if (key == GLFW_KEY_1 && action == GLFW_PRESS)
+        fx_factory.current_model = 0;
+    else if (key == GLFW_KEY_2 && action == GLFW_PRESS)
+        fx_factory.current_model = 1;
 
+    // Fragment render
+    if (key == GLFW_KEY_E && action == GLFW_PRESS)
+        toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::UNDEFINED);
+    if (key == GLFW_KEY_R && action == GLFW_PRESS)
+        toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::COMPUTE_LIGHT);
+    if (key == GLFW_KEY_T && action == GLFW_PRESS)
+        toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::TEX_BEFORE);
+    if (key == GLFW_KEY_Y && action == GLFW_PRESS)
+        toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::TEX_MOVE);
+    if (key == GLFW_KEY_U && action == GLFW_PRESS)
+        toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::TEX_MOVE_GLITCH);
+    if (key == GLFW_KEY_I && action == GLFW_PRESS)
+        toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::COLORIZE);
+    if (key == GLFW_KEY_O && action == GLFW_PRESS)
+        toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::TEX_RGB_SPLIT);
+    if (key == GLFW_KEY_P && action == GLFW_PRESS)
+        toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::EDGE_ENHANCE);
+    if (key == GLFW_KEY_G && action == GLFW_PRESS)
+        toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::TOONIFY);
+    if (key == GLFW_KEY_H && action == GLFW_PRESS)
+        toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::HORRORIFY);
+
+    // Fragment screen
     if (key == GLFW_KEY_Z && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx, FX_frag::HORRORIFY);
+        toggle(fx_factory.frag_screen, FX::FragScreen::SCREEN_UNDEFINED);
     if (key == GLFW_KEY_X && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::HORRORIFY);
+        toggle(fx_factory.frag_screen, FX::FragScreen::SCREEN_TEX_BEFORE);
     if (key == GLFW_KEY_C && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::HORRORIFY);
+        toggle(fx_factory.frag_screen, FX::FragScreen::SCREEN_TEX_RGB_SPLIT);
     if (key == GLFW_KEY_V && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::HORRORIFY);
+        toggle(fx_factory.frag_screen, FX::FragScreen::SCREEN_RECTANGLES);
+    if (key == GLFW_KEY_B && action == GLFW_PRESS)
+        toggle(fx_factory.frag_screen, FX::FragScreen::SCREEN_DISTORTION);
+    if (key == GLFW_KEY_N && action == GLFW_PRESS)
+        toggle(fx_factory.frag_screen, FX::FragScreen::SCREEN_K7);
+
+    std::cout << "current model = " << fx_factory.current_model << std::endl
+              << "frag_render = " << fx_factory.frag_renders[fx_factory.current_model] << std::endl
+              << "frag_screen = " << fx_factory.frag_screen << std::endl;
+
 }
 
 void process_input(GLFWwindow *window, float delta_time)
@@ -126,8 +143,6 @@ void process_input(GLFWwindow *window, float delta_time)
 
 void set_uniforms(Program& program, int window_w, int window_h, float total_time, float delta_time)
 {
-    glUseProgram(program.program_id);
-
     // set uniforms
     program.set_float("total_time", total_time);
     program.set_float("delta_time", delta_time);
@@ -201,16 +216,16 @@ int main()
                                                           "../shaders/fragment/screen/rectangles.glsl",
                                                           "../shaders/fragment/screen/k7.glsl",
                                                           "../shaders/fragment/screen/all.glsl"};
-    Program program_screen(screen_vertex_paths, screen_fragment_paths);
+    Program program_screen_classic(screen_vertex_paths, screen_fragment_paths);
 
     // Copy of classic screen program, with undefined behaviour
-    /*auto screen_fragment_paths_undefined = std::vector<const char*>{"../shaders/random.glsl",
+    auto screen_fragment_paths_undefined = std::vector<const char*>{"../shaders/random.glsl",
                                                           "../shaders/fragment/screen/tex-rgb-split.glsl",
                                                           "../shaders/fragment/screen/distortion.glsl",
                                                           "../shaders/fragment/screen/rectangles.glsl",
                                                           "../shaders/fragment/screen/k7.glsl",
                                                           "../shaders/fragment/screen/all-undefined.glsl"};
-    Program program_screen_undefined(screen_vertex_paths, screen_fragment_paths_undefined);*/
+    Program program_screen_undefined(screen_vertex_paths, screen_fragment_paths_undefined);
 
 
     Model samus("../resources/varia-suit/DolBarriersuit.obj");
@@ -220,7 +235,7 @@ int main()
     //Model classroom("../resources/animeclassroom/anime school.obj");
 
 
-    FXs = std::vector<FX::FX>(2);
+    fx_factory = FX::FXFactory(2);
 
 
     // screen quad
@@ -293,14 +308,15 @@ int main()
         // SAMUS -------------------------------------------------------------------------------------------------------
         Program program_samus;
         // Choose undefined of classic program
-        if (FXs[0].frag_render & FX::FragRender::UNDEFINED)
+        if (fx_factory.frag_renders[0] & FX::FragRender::UNDEFINED)
             program_samus.program_id = program_undefined.program_id;
         else
             program_samus.program_id = program_classic.program_id;
+        glUseProgram(program_samus.program_id);
         // Set classic uniforms
         set_uniforms(program_samus, window_w, window_h, total_time, delta_time);
         // set FX
-        program_samus.set_int("FX", FXs[0].frag_render);
+        program_samus.set_int("FX", fx_factory.frag_renders[0]);
         // set Model matrix
         glm::mat4 model_mat = glm::mat4(1.f);
         model_mat = glm::translate(model_mat, glm::vec3(-0.3, -10.f, -3.f));
@@ -315,14 +331,15 @@ int main()
         // BACKGROUND --------------------------------------------------------------------------------------------------
         Program program_background;
         // Choose undefined of classic program
-        if (FXs[1].frag_render & FX::FragRender::UNDEFINED)
+        if (fx_factory.frag_renders[1] & FX::FragRender::UNDEFINED)
             program_background.program_id = program_undefined.program_id;
         else
             program_background.program_id = program_classic.program_id;
+        glUseProgram(program_background.program_id);
         // Set classic uniforms
         set_uniforms(program_background, window_w, window_h, total_time, delta_time);
         // set FX
-        program_samus.set_int("FX", FXs[1].frag_render);
+        program_samus.set_int("FX", fx_factory.frag_renders[1]);
         // set Model matrix
         model_mat = glm::mat4(1.f);
         model_mat = glm::translate(model_mat, glm::vec3(-0.3, -10.f, -3.f));
@@ -356,20 +373,20 @@ int main()
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(program_screen.program_id);
-
-        program_screen.set_int("screen_texture", 0);
-        program_screen.set_float("total_time", total_time);
-        program_screen.set_float("delta_time", delta_time);
-        program_screen.set_vec2("resolution", window_w, window_h);
-        program_screen.set_int("rand", std::rand() % 100);
-
 
         // SCREEN ------------------------------------------------------------------------------------------------------
+        Program program_screen;
+        // Choose undefined of classic program
+        if (fx_factory.frag_screen & FX::FragScreen::SCREEN_UNDEFINED)
+            program_screen.program_id = program_screen_undefined.program_id;
+        else
+            program_screen.program_id = program_screen_classic.program_id;
+        glUseProgram(program_screen.program_id);
         // Set classic uniforms
         set_uniforms(program_screen, window_w, window_h, total_time, delta_time);
+        program_screen.set_int("screen_texture", 0);
         // set FX
-        //program_background.set_int("FX", camera.fx_screen);
+        program_screen.set_int("FX", fx_factory.frag_screen);
         // Draw
         glBindVertexArray(quadVAO);
         glBindTexture(GL_TEXTURE_2D, texture_color_buffer);	// use the color attachment texture as the texture of the quad plane

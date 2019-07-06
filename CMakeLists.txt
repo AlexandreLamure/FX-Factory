@@ -10,7 +10,8 @@ add_executable(openGL_Glitch
                src/program.cc src/program.hh
                src/model.cc src/model.hh
                src/camera.cc src/camera.hh
-               src/main.cpp)
+               src/fx-factory.hh src/fx-factory.cc
+               src/main.cc)
 
 #OpenGL
 find_package(OpenGL REQUIRED)

@@ -33,7 +33,7 @@ uniform int rand;
 //#define TEX_RGB_SPLIT
 //#define EDGE_ENHANCE
 //#define TOONIFY
-#define HORRORIFY
+//#define HORRORIFY
 
 
 vec4 tex_move_glitch(vec2 uv,

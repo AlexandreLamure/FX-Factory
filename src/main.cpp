@@ -102,7 +102,8 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
 
     auto vertex_paths = std::vector<const char*>{"../shaders/vertex/basic.glsl"};
-    auto fragment_paths = std::vector<const char*>{"../shaders/fragment/compute-lights.glsl",
+    auto fragment_paths = std::vector<const char*>{"../shaders/random.glsl",
+                                                   "../shaders/fragment/compute-lights.glsl",
                                                    "../shaders/fragment/tex-move.glsl",
                                                    "../shaders/fragment/colorize.glsl",
                                                    "../shaders/fragment/tex-rgb-split.glsl",
@@ -112,7 +113,12 @@ int main()
                                                    "../shaders/fragment/all.glsl"};
     Program program(vertex_paths, fragment_paths);
     auto screen_vertex_paths = std::vector<const char*>{"../shaders/vertex/screen/basic.glsl"};
-    auto screen_fragment_paths = std::vector<const char*>{"../shaders/fragment/screen/basic.glsl"};
+    auto screen_fragment_paths = std::vector<const char*>{"../shaders/random.glsl",
+                                                          "../shaders/fragment/screen/rgb-split.glsl",
+                                                          "../shaders/fragment/screen/distortion.glsl",
+                                                          "../shaders/fragment/screen/rectangles.glsl",
+                                                          "../shaders/fragment/screen/k7.glsl",
+                                                          "../shaders/fragment/screen/all.glsl"};
     Program screen_program(screen_vertex_paths, screen_fragment_paths);
 
     Model samus("../resources/varia-suit/DolBarriersuit.obj");

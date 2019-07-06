@@ -22,11 +22,13 @@ uniform vec3 camera_pos;
 uniform int mesh_id;
 uniform int rand;
 
+uniform int FX;
+
 #define PI = 3.1415926535;
 
 //#define UNDEFINED
-#define COMPUTE_LIGHT
-#define TEX_BEFORE
+//#define COMPUTE_LIGHT
+//#define TEX_BEFORE
 //#define TEX_MOVE
 //#define TEX_MOVE_GLITCH
 //#define COLORIZE
@@ -35,6 +37,18 @@ uniform int rand;
 //#define TOONIFY
 //#define HORRORIFY
 
+
+const int UNDEFINED              = 1 << 0;
+const int COMPUTE_LIGHT          = 1 << 1;
+const int TEX_BEFORE             = 1 << 2;
+/*const int TEX_MOVE               = 1 << 3;
+const int TEX_MOVE_GLITCH        = 1 << 4;
+const int COLORIZE               = 1 << 5;
+const int TEX_RGB_SPLIT          = 1 << 6;
+const int EDGE_ENHANCE           = 1 << 7;
+const int TOONIFY                = 1 << 8;
+const int HORRORIFY              = 1 << 9;
+*/
 
 vec4 tex_move_glitch(vec2 uv,
                      sampler2D texture_diffuse1,
@@ -75,7 +89,8 @@ vec4 horrorify(vec2 uv,
 
 vec4 compute_texel(vec2 uv)
 {
-    vec4 texel;
+    vec4 texel = texture(texture_diffuse1, uv);
+
     #ifdef TEX_MOVE_GLITCH
     texel = tex_move_glitch(uv,
                             texture_diffuse1,
@@ -89,28 +104,22 @@ vec4 compute_texel(vec2 uv)
                           texture_diffuse1,
                           total_time,
                           rand);
-    #else
-    #ifndef TEX_MOVE_GLITCH // FIXME : use returns instead of nested ifdef
-    texel = texture(texture_diffuse1, uv);
     #endif
-    #endif
+
     return texel;
 }
 
 void main()
 {
-    #ifndef UNDEFINED
     output_color = vec4(1);
-    #endif
 
     vec2 uv = interpolated_tex_coords;
     #ifdef TEX_MOVE
     uv += 0.1 * total_time;
     #endif
 
-    #ifdef TEX_BEFORE
-    output_color *= compute_texel(uv);
-    #endif
+    if (bool(FX & TEX_BEFORE))
+        output_color *= compute_texel(uv);
 
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
@@ -129,14 +138,13 @@ void main()
                                 output_color, 0.55, true);
     #endif
 
-    #ifdef COMPUTE_LIGHT
-    output_color = compute_lights(interpolated_pos, interpolated_normal,
-                                  ambient_light_color,
-                                  light1_color, light1_position,
-                                  light2_color, light2_position,
-                                  camera_pos,
-                                  output_color);
-    #endif
+    if (bool(FX & COMPUTE_LIGHT))
+        output_color = compute_lights(interpolated_pos, interpolated_normal,
+                                      ambient_light_color,
+                                      light1_color, light1_position,
+                                      light2_color, light2_position,
+                                      camera_pos,
+                                      output_color);
 
 
     #ifdef TOONIFY
@@ -156,7 +164,6 @@ void main()
     /* ------------------------------------------------------- */
 
 
-    #ifndef TEX_BEFORE
-    output_color *= compute_texel(uv);
-    #endif
+    if (!bool(FX & TEX_BEFORE))
+        output_color *= compute_texel(uv);
 }

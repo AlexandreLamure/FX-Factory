@@ -61,6 +61,23 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
         camera.fov = 45.0f;
 }
 
+template<typename T>
+void toggle(T& a, T b)
+{
+    std::cout << "TOGGLE" << std::endl;
+    a = a & b ? a & ~b : a | b;
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_U && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::UNDEFINED);
+    if (key == GLFW_KEY_L && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::COMPUTE_LIGHT);
+    if (key == GLFW_KEY_B && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_BEFORE);
+}
+
 void process_input(GLFWwindow *window, float delta_time)
 {
     float delta_speed = camera.speed * delta_time;
@@ -83,6 +100,32 @@ void process_input(GLFWwindow *window, float delta_time)
 }
 
 
+void set_uniforms(Program& program, int window_w, int window_h, float total_time, float delta_time)
+{
+    glUseProgram(program.program_id);
+
+    // set uniforms
+    program.set_float("total_time", total_time);
+    program.set_float("delta_time", delta_time);
+    program.set_vec2("resolution", window_w, window_h);
+    // set random
+    program.set_int("rand", std::rand() % 100);
+    // set lights
+    program.set_vec3("ambient_light_color", 0.5f, 0.5f, 0.5f);
+    program.set_vec3("light1_color", 1.0f, 1.0f, 1.0f);
+    program.set_vec3("light1_position", -5.0f, 15.0f, 10.0f);
+    program.set_vec3("light2_color", 0.8f, 0.0f + (cos(total_time)), 0.3f);
+    program.set_vec3("light2_position", 5.0f, 0.0f, 2.0f);
+    program.set_vec3("camera_pos", camera.pos);
+    program.set_vec2("mouse_pos", camera.mouse_pos);
+
+    glm::mat4 view = glm::lookAt(camera.pos, camera.pos + camera.front, camera.up);
+    program.set_mat4("view", view);
+
+    glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)window_w/(float)window_h, 0.1f, 1000.0f);
+    program.set_mat4("projection", projection);
+}
+
 int main()
 {
     // window variables
@@ -100,6 +143,7 @@ int main()
     GLFWwindow *window = Init::init_all(window_w, window_h);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
+    glfwSetKeyCallback(window, key_callback);
 
     auto vertex_paths = std::vector<const char*>{"../shaders/vertex/basic.glsl"};
     auto fragment_paths = std::vector<const char*>{"../shaders/random.glsl",
@@ -111,15 +155,29 @@ int main()
                                                    "../shaders/fragment/hsv.glsl",
                                                    "../shaders/fragment/horror.glsl",
                                                    "../shaders/fragment/all.glsl"};
-    Program program(vertex_paths, fragment_paths);
+    Program program_classic(vertex_paths, fragment_paths);
+
+    // Copy of classic program, with undefined behaviour
+    auto fragment_paths_u = std::vector<const char*>{"../shaders/random.glsl",
+                                                   "../shaders/fragment/compute-lights.glsl",
+                                                   "../shaders/fragment/tex-move.glsl",
+                                                   "../shaders/fragment/colorize.glsl",
+                                                   "../shaders/fragment/tex-rgb-split.glsl",
+                                                   "../shaders/fragment/edge.glsl",
+                                                   "../shaders/fragment/hsv.glsl",
+                                                   "../shaders/fragment/horror.glsl",
+                                                   "../shaders/fragment/all-undefined.glsl"};
+    Program program_undefined(vertex_paths, fragment_paths_u);
+
+
     auto screen_vertex_paths = std::vector<const char*>{"../shaders/vertex/screen/basic.glsl"};
     auto screen_fragment_paths = std::vector<const char*>{"../shaders/random.glsl",
-                                                          "../shaders/fragment/screen/rgb-split.glsl",
+                                                          "../shaders/fragment/screen/tex-rgb-split.glsl",
                                                           "../shaders/fragment/screen/distortion.glsl",
                                                           "../shaders/fragment/screen/rectangles.glsl",
                                                           "../shaders/fragment/screen/k7.glsl",
                                                           "../shaders/fragment/screen/all.glsl"};
-    Program screen_program(screen_vertex_paths, screen_fragment_paths);
+    Program program_screen(screen_vertex_paths, screen_fragment_paths);
 
     Model samus("../resources/varia-suit/DolBarriersuit.obj");
     Model background("../resources/varia-suit/background.obj");
@@ -192,48 +250,57 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(program.program_id);
-
-        // set uniforms
-        program.set_float("total_time", total_time);
-        program.set_float("delta_time", delta_time);
-        program.set_vec2("resolution", window_w, window_h);
-        // set random
-        program.set_int("rand", std::rand() % 100);
-        // set lights
-        program.set_vec3("ambient_light_color", 0.5f, 0.5f, 0.5f);
-        program.set_vec3("light1_color", 1.0f, 1.0f, 1.0f);
-        program.set_vec3("light1_position", -5.0f, 15.0f, 10.0f);
-        program.set_vec3("light2_color", 0.8f, 0.0f + (cos(total_time)), 0.3f);
-        program.set_vec3("light2_position", 5.0f, 0.0f, 2.0f);
-        program.set_vec3("camera_pos", camera.pos);
-
-        glm::mat4 view = glm::lookAt(camera.pos, camera.pos + camera.front, camera.up);
-        program.set_mat4("view", view);
-
-        glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)window_w/(float)window_h, 0.1f, 1000.0f);
-        program.set_mat4("projection", projection);
 
 
-        // samus
-        glm::mat4 model = glm::mat4(1.f);
-        model = glm::translate(model, glm::vec3(-0.3, -10.f, -3.f));
-        model = glm::rotate(model, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
-        program.set_mat4("model", model);
-        samus.draw(program);
+        // SAMUS -------------------------------------------------------------------------------------------------------
+        Program program_samus;
+        // Choose undefined of classic program
+        if (camera.fx_frag_samus & FX_frag::UNDEFINED)
+            program_samus.program_id = program_undefined.program_id;
+        else
+            program_samus.program_id = program_classic.program_id;
+        // Set classic uniforms
+        set_uniforms(program_samus, window_w, window_h, total_time, delta_time);
+        // set FX
+        program_samus.set_int("FX", camera.fx_frag_samus);
+        // set Model matrix
+        glm::mat4 model_mat = glm::mat4(1.f);
+        model_mat = glm::translate(model_mat, glm::vec3(-0.3, -10.f, -3.f));
+        model_mat = glm::rotate(model_mat, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
+        program_samus.set_mat4("model", model_mat);
+        // Draw
+        samus.draw(program_samus);
+        // -------------------------------------------------------------------------------------------------------------
 
-        // background
-        model = glm::mat4(1.f);
-        model = glm::translate(model, glm::vec3(-0.3, -10.f, -3.f));
-        program.set_mat4("model", model);
-        background.draw(program);
+
+
+        // BACKGROUND --------------------------------------------------------------------------------------------------
+        Program program_background;
+        // Choose undefined of classic program
+        if (camera.fx_frag_background & FX_frag::UNDEFINED)
+            program_background.program_id = program_undefined.program_id;
+        else
+            program_background.program_id = program_classic.program_id;
+        // Set classic uniforms
+        set_uniforms(program_background, window_w, window_h, total_time, delta_time);
+        // set FX
+        program_background.set_int("FX", camera.fx_frag_background);
+        // set Model matrix
+        model_mat = glm::mat4(1.f);
+        model_mat = glm::translate(model_mat, glm::vec3(-0.3, -10.f, -3.f));
+        program_background.set_mat4("model", model_mat);
+        // Draw
+        background.draw(program_background);
+        // -------------------------------------------------------------------------------------------------------------
+
+
 
 /*
         // spitfire
         glm::mat4 model = glm::mat4(1.f);
         model = glm::translate(model, glm::vec3(0., -10.f, -20.f));
-        program.set_mat4("model", model);
-        spitfire.draw(program);
+        tmp.set_mat4("model", model);
+        spitfire.draw(tmp);
 */
 
         // classroom
@@ -251,18 +318,27 @@ int main()
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(screen_program.program_id);
+        glUseProgram(program_screen.program_id);
 
-        screen_program.set_int("screen_texture", 0);
-        screen_program.set_float("total_time", total_time);
-        screen_program.set_float("delta_time", delta_time);
-        screen_program.set_vec2("resolution", window_w, window_h);
-        screen_program.set_vec2("mouse_pos", camera.mouse_pos);
-        screen_program.set_int("rand", std::rand() % 100);
+        program_screen.set_int("screen_texture", 0);
+        program_screen.set_float("total_time", total_time);
+        program_screen.set_float("delta_time", delta_time);
+        program_screen.set_vec2("resolution", window_w, window_h);
+        program_screen.set_int("rand", std::rand() % 100);
 
+
+        // SCREEN ------------------------------------------------------------------------------------------------------
+        // Set classic uniforms
+        set_uniforms(program_screen, window_w, window_h, total_time, delta_time);
+        // set FX
+        //program_background.set_int("FX", camera.fx_screen);
+        // Draw
         glBindVertexArray(quadVAO);
         glBindTexture(GL_TEXTURE_2D, texture_color_buffer);	// use the color attachment texture as the texture of the quad plane
         glDrawArrays(GL_TRIANGLES, 0, 6);
+        // -------------------------------------------------------------------------------------------------------------
+
+
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

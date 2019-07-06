@@ -25,6 +25,10 @@ public:
     GLuint program_id;
 
     Program(const std::vector<const char*>& vertex_paths, const std::vector<const char*>& fragment_paths); // take vectors to allow shaders ''libraries''
+    Program()
+        : program_id(0)
+    {};
+
 
     void set_bool(const std::string &name, bool value) const;
     void set_int(const std::string &name, int value) const;

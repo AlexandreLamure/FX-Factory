@@ -1,14 +1,8 @@
 #version 430
 
-float randf(vec2 seed)
-{
-    return fract(sin(dot(seed.xy ,vec2(12.9898,78.233))) * 43758.5453);
-}
-
-float randf(float seed)
-{
-    return randf(vec2(seed,1.0));
-}
+float randf(vec2 seed);
+float randf(float seed);
+float jerky_rand(float seed);
 
 vec4 horrorify(vec2 uv,
                sampler2D texture_diffuse1,
@@ -42,7 +36,8 @@ vec4 horrorify(vec2 uv,
 
     glitch_coef *= (1.0 + randf(uv + intensity * 0.01) * (cos(total_time * rand / 1000) - 0.8) * 4);
 
-    if (mesh_id % 20 == int(total_time) % 16)
+    // disappear
+    if (mesh_id % 18 == int(total_time) % 16)
         color_org.a *= cos(total_time) * sin(total_time);
 
     return vec4(color * glitch_coef, color_org.a);

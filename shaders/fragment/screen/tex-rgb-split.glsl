@@ -4,11 +4,11 @@ float randf(vec2 seed);
 float randf(float seed);
 float jerky_rand(float seed);
 
-vec4 rgb_split(vec2 uv,
-               sampler2D screen_texture,
-               float total_time,
-               int rand,
-               bool slow)
+vec4 tex_rgb_split(vec2 uv,
+                   sampler2D screen_texture,
+                   float total_time,
+                   int rand,
+                   bool slow)
 {
     vec2 decay;
     if (slow && cos(total_time + rand / 100) < 0.9)

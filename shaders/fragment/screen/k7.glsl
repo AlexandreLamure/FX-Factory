@@ -25,7 +25,7 @@ float random_line(vec2 uv, float seed)
 }
 
 // Generate some blotches.
-float random_blotch(vec2 uv, float seed)
+float random_blotch(vec2 uv, float seed, vec2 resolution)
 {
     float x = randf(seed);
     float y = randf(seed + 1);
@@ -43,43 +43,40 @@ float random_blotch(vec2 uv, float seed)
     return mix(0.3 + 0.2 * (1.0 - (s / 0.02)), 1.0, v);
 }
 
-vec4 (vec2 uv)
+vec4 k7(vec2 uv,
+        sampler2D screen_texture,
+        float total_time,
+        vec2 resolution,
+        int rand)
 {
-    vec2 uv = interpolated_tex_coords;
-
-    float intensity = interpolated_tex_coords.y * rand;
+    float intensity = uv.y * rand;
 
     // Get some image movement
     vec2 suv = uv + 0.002 * vec2( randf(intensity), randf(intensity + 23.0));
 
-    // Get the image
-    vec4 tex_color = texture2D(screen_texture, vec2(suv.x, suv.y));
-
-
+    vec4 output_color = texture(screen_texture, suv);
 
     #ifdef DESCENT
     // descending line
     float line_pos = 1.0 - (total_time / 10 - floor(total_time / 10));
     line_pos = line_pos * 5 - 4;
     float line_height = 0.01 + uv.x * rand / 10000;
-    if (interpolated_tex_coords.y > line_pos - line_height && interpolated_tex_coords.y < line_pos)
+    if (uv.y > line_pos - line_height && uv.y < line_pos)
     {
-        tex_color = texture(screen_texture, interpolated_tex_coords - 0.1 * rand / 1000);
+        output_color = texture(screen_texture, uv - 0.1 * rand / 1000);
         if (cos(total_time) * sin(total_time) * cos(total_time) < 0)
         {
-            float luma_line = 0.2126 * tex_color.r + 0.7152 * tex_color.g + 0.0722 * tex_color.b;
-            output_color.rgb = mix(vec3(luma_line), tex_color.rgb, 0.15);
+            float luma_line = 0.2126 * output_color.r + 0.7152 * output_color.g + 0.0722 * output_color.b;
+            output_color.rgb = mix(vec3(luma_line), output_color.rgb, 0.15);
         }
         else
-        output_color = tex_color;
+        output_color = output_color;
     }
     #endif
 
-
-
     #ifdef BLACK_AND_WHITE
-    float luma = 0.2126 * tex_color.r + 0.7152 * tex_color.g + 0.0722 * tex_color.b;
-    tex_color.rgb = mix(vec3(luma), tex_color.rgb, 0.25);
+    float luma = 0.2126 * output_color.r + 0.7152 * output_color.g + 0.0722 * output_color.b;
+    output_color.rgb = mix(vec3(luma), output_color.rgb, 0.25);
     #endif
 
     // Create a total_time-varyting vignetting effect
@@ -103,13 +100,14 @@ vec4 (vec2 uv)
     #ifdef BLOTCHES
     int intensity_blotch = int(max(5.0 * randf(intensity+18.0) -2.0, 0.0));
     for (int i = 0; i < intensity_blotch; ++i)
-        glitch_coef *= random_blotch(uv, intensity);
+        glitch_coef *= random_blotch(uv, intensity, resolution);
     #endif
 
-    output_color = vec4(tex_color.rgb * glitch_coef, tex_color.a);
+    output_color.rgb *= glitch_coef;
 
     #ifdef GRAIN
     output_color.xyz *= (0.9 + (randf(uv + float(rand) / 1000)) * 0.45);
     #endif
 
+    return output_color;
 }

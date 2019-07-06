@@ -87,11 +87,11 @@ vec4 k7(vec2 uv,
     glitch_coef += 0.7 + 0.04 * randf(intensity + 8);
 
     // Add a fixed vignetting (independent of the flicker)
-    glitch_coef *= pow(20 * uv.x * (1.0-uv.x) * uv.y * (1.0-uv.y), 0.4);
+    glitch_coef *= pow(28 * uv.x * (1.0-uv.x) * uv.y * (1.0-uv.y), 0.4);
 
     // Add some random lines (and some multiplicative flicker. Oh well.)
     #ifdef LINES_AND_FLICKER
-    int intensity_laf = int(3.5 * randf(intensity + 7.0));
+    int intensity_laf = int(14 * randf(intensity + 7.0));
     for (int i = 0; i < intensity_laf; ++i)
         glitch_coef *= random_line(uv, intensity);
     #endif

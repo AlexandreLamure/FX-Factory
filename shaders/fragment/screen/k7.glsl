@@ -6,25 +6,9 @@
 //#define GRAIN
 //#define DESCENT
 
-in vec2 interpolated_tex_coords;
-
-out vec4 output_color;
-
-uniform sampler2D screen_texture;
-uniform vec2 resolution;
-uniform float total_time;
-uniform float delta_time;
-uniform int rand;
-
-float randf(vec2 seed)
-{
-    return fract(sin(dot(seed.xy ,vec2(12.9898,78.233))) * 43758.5453);
-}
-
-float randf(float seed)
-{
-    return randf(vec2(seed,1.0));
-}
+float randf(vec2 seed);
+float randf(float seed);
+float jerky_rand(float seed);
 
 float random_line(vec2 uv, float seed)
 {
@@ -59,7 +43,7 @@ float random_blotch(vec2 uv, float seed)
     return mix(0.3 + 0.2 * (1.0 - (s / 0.02)), 1.0, v);
 }
 
-void main()
+vec4 (vec2 uv)
 {
     vec2 uv = interpolated_tex_coords;
 

@@ -19,9 +19,4 @@ Camera::Camera()
     pitch = 0.f;
 
     first_mouse_move = true;
-
-    fx_frag_samus = FX_frag::COMPUTE_LIGHT | FX_frag::TEX_BEFORE;
-    fx_screen_frag_samus = FX_screen_frag::SCREEN_TEX_BEFORE;
-    fx_frag_background = FX_frag::COMPUTE_LIGHT | FX_frag::TEX_BEFORE | FX_frag::UNDEFINED;
-    fx_screen_frag_background = FX_screen_frag::SCREEN_TEX_BEFORE;
 }

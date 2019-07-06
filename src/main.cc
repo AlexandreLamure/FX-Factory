@@ -10,9 +10,11 @@
 #include "program.hh"
 #include "model.hh"
 #include "camera.hh"
+#include "fx-factory.hh"
 
 
 Camera camera;
+std::vector<FX::FX> FXs;
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
@@ -69,27 +71,35 @@ void toggle(T& a, T b)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_U && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::UNDEFINED);
-    if (key == GLFW_KEY_L && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::COMPUTE_LIGHT);
-    if (key == GLFW_KEY_B && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_BEFORE);
-    if (key == GLFW_KEY_SEMICOLON && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_MOVE);
-    if (key == GLFW_KEY_G && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_MOVE_GLITCH);
-    if (key == GLFW_KEY_C && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::COLORIZE);
-    if (key == GLFW_KEY_R && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_RGB_SPLIT);
     if (key == GLFW_KEY_E && action == GLFW_PRESS)
-        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::EDGE_ENHANCE);
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::UNDEFINED);
+    if (key == GLFW_KEY_R && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::COMPUTE_LIGHT);
     if (key == GLFW_KEY_T && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_BEFORE);
+    if (key == GLFW_KEY_Y && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_MOVE);
+    if (key == GLFW_KEY_U && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_MOVE_GLITCH);
+    if (key == GLFW_KEY_I && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::COLORIZE);
+    if (key == GLFW_KEY_O && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TEX_RGB_SPLIT);
+    if (key == GLFW_KEY_P && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::EDGE_ENHANCE);
+    if (key == GLFW_KEY_G && action == GLFW_PRESS)
         toggle<FX_frag>(camera.fx_frag_samus, FX_frag::TOONIFY);
     if (key == GLFW_KEY_H && action == GLFW_PRESS)
         toggle<FX_frag>(camera.fx_frag_samus, FX_frag::HORRORIFY);
 
+    if (key == GLFW_KEY_Z && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx, FX_frag::HORRORIFY);
+    if (key == GLFW_KEY_X && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::HORRORIFY);
+    if (key == GLFW_KEY_C && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::HORRORIFY);
+    if (key == GLFW_KEY_V && action == GLFW_PRESS)
+        toggle<FX_frag>(camera.fx_frag_samus, FX_frag::HORRORIFY);
 }
 
 void process_input(GLFWwindow *window, float delta_time)
@@ -193,11 +203,25 @@ int main()
                                                           "../shaders/fragment/screen/all.glsl"};
     Program program_screen(screen_vertex_paths, screen_fragment_paths);
 
+    // Copy of classic screen program, with undefined behaviour
+    /*auto screen_fragment_paths_undefined = std::vector<const char*>{"../shaders/random.glsl",
+                                                          "../shaders/fragment/screen/tex-rgb-split.glsl",
+                                                          "../shaders/fragment/screen/distortion.glsl",
+                                                          "../shaders/fragment/screen/rectangles.glsl",
+                                                          "../shaders/fragment/screen/k7.glsl",
+                                                          "../shaders/fragment/screen/all-undefined.glsl"};
+    Program program_screen_undefined(screen_vertex_paths, screen_fragment_paths_undefined);*/
+
+
     Model samus("../resources/varia-suit/DolBarriersuit.obj");
     Model background("../resources/varia-suit/background.obj");
 
     //Model spitfire("../resources/spitfire/SpitFire.obj");
     //Model classroom("../resources/animeclassroom/anime school.obj");
+
+
+    FXs = std::vector<FX::FX>(2);
+
 
     // screen quad
     float quad_vertices[] = {
@@ -269,14 +293,14 @@ int main()
         // SAMUS -------------------------------------------------------------------------------------------------------
         Program program_samus;
         // Choose undefined of classic program
-        if (camera.fx_frag_samus & FX_frag::UNDEFINED)
+        if (FXs[0].frag_render & FX::FragRender::UNDEFINED)
             program_samus.program_id = program_undefined.program_id;
         else
             program_samus.program_id = program_classic.program_id;
         // Set classic uniforms
         set_uniforms(program_samus, window_w, window_h, total_time, delta_time);
         // set FX
-        program_samus.set_int("FX", camera.fx_frag_samus);
+        program_samus.set_int("FX", FXs[0].frag_render);
         // set Model matrix
         glm::mat4 model_mat = glm::mat4(1.f);
         model_mat = glm::translate(model_mat, glm::vec3(-0.3, -10.f, -3.f));
@@ -291,14 +315,14 @@ int main()
         // BACKGROUND --------------------------------------------------------------------------------------------------
         Program program_background;
         // Choose undefined of classic program
-        if (camera.fx_frag_background & FX_frag::UNDEFINED)
+        if (FXs[1].frag_render & FX::FragRender::UNDEFINED)
             program_background.program_id = program_undefined.program_id;
         else
             program_background.program_id = program_classic.program_id;
         // Set classic uniforms
         set_uniforms(program_background, window_w, window_h, total_time, delta_time);
         // set FX
-        program_background.set_int("FX", camera.fx_frag_background);
+        program_samus.set_int("FX", FXs[1].frag_render);
         // set Model matrix
         model_mat = glm::mat4(1.f);
         model_mat = glm::translate(model_mat, glm::vec3(-0.3, -10.f, -3.f));

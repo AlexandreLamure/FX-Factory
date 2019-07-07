@@ -1,5 +1,16 @@
 #version 430
 
+float triangle(float x)
+{
+    float tmp = fract(x);
+    return max(tmp, 1 - tmp) * 2;
+}
+
+vec2 circle(float x)
+{
+    return vec2(cos(x), sin(x));
+}
+
 float randf(vec2 seed)
 {
     return fract(sin(dot(seed.xy ,vec2(12.9898,78.233))) * 43758.5453);

@@ -11,5 +11,8 @@ vec4 distortion(vec2 uv,
     vec2 value = d * dir;
     vec2 glitch_uv = vec2(uv.x + sin(uv.x) * d,
                           uv.y + sin(uv.x) * d);
+
+    glitch_uv *= 1.5 * total_time * uv.x * (1.0-uv.x) * uv.y * (1.0-uv.y);
+
     return texture2D(screen_texture, glitch_uv);
 }

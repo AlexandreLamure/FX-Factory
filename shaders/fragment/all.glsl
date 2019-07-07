@@ -38,6 +38,7 @@ const int TEX_RGB_SPLIT          = 1 << 6; // O
 const int EDGE_ENHANCE           = 1 << 7; // P
 const int TOONIFY                = 1 << 8; // G
 const int HORRORIFY              = 1 << 9; // H
+const int PIXELIZE               = 1 << 10; // J
 
 
 float snoise(vec2 v);
@@ -80,6 +81,10 @@ vec4 horrorify(vec2 uv,
                int mesh_id, int rand,
                vec4 color_org, bool colorize);
 
+vec4 pixelize(vec2 uv,
+              sampler2D texture_diffuse1,
+              float total_time);
+
 
 vec4 compute_texel(vec2 uv, int FX)
 {
@@ -88,7 +93,10 @@ vec4 compute_texel(vec2 uv, int FX)
         return tex_move_glitch(uv, texture_diffuse1, total_time, mesh_id, rand, 1);
     else if (bool(FX & TEX_RGB_SPLIT))
         return tex_rgb_split(uv, texture_diffuse1, total_time, rand);
-    else
+    else if (bool(FX & PIXELIZE))
+        return pixelize(uv, texture_diffuse1, total_time);
+
+else
         return texture(texture_diffuse1, uv);
 }
 

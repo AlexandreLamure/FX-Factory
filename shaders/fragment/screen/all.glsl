@@ -26,10 +26,12 @@ const int TEX_RGB_SPLIT          = 1 << 2; // C
 const int RECTANGLES             = 1 << 3; // V
 const int DISTORTION             = 1 << 4; // B
 const int K7                     = 1 << 5; // N
+const int PIXELIZE               = 1 << 6; // ,
 
 vec4 tex_rgb_split(vec2 uv,
                    sampler2D screen_texture,
                    float total_time,
+                   vec2 resolution,
                    int rand,
                    bool slow);
 
@@ -50,14 +52,20 @@ vec4 k7(vec2 uv,
         vec2 resolution,
         int rand);
 
+vec4 pixelize(vec2 uv,
+sampler2D texture_diffuse1,
+float total_time);
+
 vec4 compute_texel(vec2 uv, int FX)
 {
     if (bool(FX & TEX_RGB_SPLIT))
-        return tex_rgb_split(uv, screen_texture, total_time, rand, false);
+        return tex_rgb_split(uv, screen_texture, total_time, resolution, rand, true);
     else if (bool(FX & DISTORTION))
         return distortion(uv, screen_texture, total_time, rand);
     else if (bool(FX & K7))
         return k7(uv, screen_texture, total_time, resolution, rand);
+    else if (bool(FX & PIXELIZE))
+        return pixelize(uv, screen_texture, total_time);
     else
         return texture(screen_texture, uv);
 }

@@ -1,15 +1,12 @@
 #version 430
 
-vec4 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
+vec4 compute_lights(vec4 interpolated_pos, vec3 normal,
                     vec3 ambient_light_color,
                     vec3 light1_color, vec3 light1_position,
                     vec3 light2_color, vec3 light2_position,
                     vec3 camera_pos,
                     vec4 color_org)
 {
-    // Light Computation
-    vec3 normal = normalize(interpolated_normal);
-
     // diffuse 1
     vec3 light1_dir = normalize(vec3(light1_position - interpolated_pos.xyz));
     float coef = dot(normal, light1_dir);

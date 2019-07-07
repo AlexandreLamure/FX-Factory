@@ -255,6 +255,7 @@ int main()
     //Model spitfire("../resources/spitfire/SpitFire.obj");
     //Model classroom("../resources/animeclassroom/anime school.obj");
     //Model earth("../resources/earth/earth.obj");
+    Model test("../resources/center-city/Center City Sci-Fi.obj");
 
 
     fx_factory = FX::FXFactory(2);
@@ -434,6 +435,30 @@ int main()
         // -------------------------------------------------------------------------------------------------------------
 */
 
+
+        // TEST ---------------------------------------------------------------------------------------------------
+        Program program_test;
+        // Choose undefined of classic program
+        if (fx_factory.frag_renders[0] & FX::FragRender::UNDEFINED)
+            program_test.program_id = program_undefined.program_id;
+        else
+            program_test.program_id = program_classic.program_id;
+        glUseProgram(program_test.program_id);
+        // Set classic uniforms
+        set_uniforms(program_test, window_w, window_h, total_time, delta_time);
+        // set FX
+        program_test.set_int("FXVertex", fx_factory.vertex_renders[0]);
+        program_test.set_int("FXFrag", fx_factory.frag_renders[0]);
+        program_test.set_int("factory_level_render", fx_factory.factory_level_render);
+        // set Model matrix
+        model_mat = glm::mat4(1.f);
+        model_mat = glm::translate(model_mat, glm::vec3(-5.f, -3.f, 18.f));
+        model_mat = glm::scale(model_mat, glm::vec3(0.1, 0.1, 0.1));
+        model_mat = glm::rotate(model_mat, glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f));
+        program_test.set_mat4("model", model_mat);
+        // Draw
+        test.draw(program_test, fx_factory.tex_id_glitch);
+        // -------------------------------------------------------------------------------------------------------------
 
         // draw a quad with the framebuffer color texture
         glBindFramebuffer(GL_FRAMEBUFFER, 0); // bind back to default framebuffer

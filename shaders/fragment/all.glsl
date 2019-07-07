@@ -4,6 +4,7 @@ in vec4 interpolated_pos;
 in vec3 interpolated_normal;
 in vec4 interpolated_color;
 in vec2 interpolated_tex_coords;
+in mat3 TBN;
 
 out vec4 output_color;
 
@@ -45,14 +46,14 @@ vec4 tex_move_glitch(vec2 uv,
                      int mesh_id, int rand,
                      int rate);
 
-vec4 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
+vec4 compute_lights(vec4 interpolated_pos, vec3 normal,
                     vec3 ambient_light_color,
                     vec3 light1_color, vec3 light1_position,
                     vec3 light2_color, vec3 light2_position,
                     vec3 camera_pos,
                     vec4 color_org);
 
-vec4 colorize(vec4 interpolated_pos, vec3 interpolated_normal,
+vec4 colorize(vec4 interpolated_pos, vec3 normal,
               float total_time,
               int mesh_id, int rand,
               vec4 color_org, int level);
@@ -87,7 +88,7 @@ vec4 compute_texel(vec2 uv, int FX)
         return texture(texture_diffuse1, uv);
 }
 
-vec4 apply_effects(vec2 uv, vec4 output_color, int FX)
+vec4 apply_effects(vec2 uv, vec3 normal, vec4 output_color, int FX)
 {
     if (bool(FX & TEX_MOVE))
         uv += 0.1 * total_time;
@@ -99,13 +100,13 @@ vec4 apply_effects(vec2 uv, vec4 output_color, int FX)
     /* ------------------------------------------------------- */
 
     if (bool(FX & COLORIZE))
-        output_color = colorize(interpolated_pos, interpolated_normal, total_time, mesh_id, rand, output_color, 3);
+        output_color = colorize(interpolated_pos, normal, total_time, mesh_id, rand, output_color, 3);
 
     if (bool(FX & EDGE_ENHANCE))
         output_color = edge_enhance(uv, texture_diffuse1, total_time, output_color, 0.55, true);
 
     if (bool(FX & COMPUTE_LIGHT))
-        output_color = compute_lights(interpolated_pos, interpolated_normal,
+        output_color = compute_lights(interpolated_pos, normal,
                                       ambient_light_color, light1_color, light1_position, light2_color, light2_position,
                                       camera_pos, output_color);
 
@@ -135,6 +136,13 @@ void main()
 
     vec2 uv = interpolated_tex_coords;
 
+    vec3 normal = interpolated_normal;
+    /* FIXME : normal maps
+    texture(texture_normal1, uv).rgb;
+    normal = normalize(normal * 2.0 - 1.0);
+    normal = normalize(TBN * normal);
+    */
+
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
 
@@ -157,6 +165,6 @@ void main()
         else if (factory_level_render == 5)
             FX = int(abs(cos(rand * i)) * (1 << 10));
 
-        output_color = apply_effects(uv, output_color, FX);
+        output_color = apply_effects(uv, normal, output_color, FX);
     }
 }

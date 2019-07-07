@@ -1,6 +1,6 @@
 #version 430
 
-vec4 colorize(vec4 interpolated_pos, vec3 interpolated_normal,
+vec4 colorize(vec4 interpolated_pos, vec3 normal,
               float total_time,
               int mesh_id, int rand,
               vec4 color_org, int level)
@@ -22,7 +22,7 @@ vec4 colorize(vec4 interpolated_pos, vec3 interpolated_normal,
     {
         vec4 glitch_color2 = vec4(0);
         if (mesh_id % 10 == int(total_time) % 7 &&
-            (int(6*cos(interpolated_normal.y + cos(0.1*total_time))) == int((6.1 + 0.05 * cos(total_time))*sin(interpolated_normal.z))))
+            (int(6*cos(normal.y + cos(0.1*total_time))) == int((6.1 + 0.05 * cos(total_time))*sin(normal.z))))
         {
             glitch_color2 = 1.0 * interpolated_pos * sin(total_time);
             glitch_color2.r *= cos(total_time);

@@ -26,7 +26,8 @@ namespace FX
         TEX_RGB_SPLIT           = 1 << 6,
         EDGE_ENHANCE            = 1 << 7,
         TOONIFY                 = 1 << 8,
-        HORRORIFY               = 1 << 9
+        HORRORIFY               = 1 << 9,
+        PIXELIZE                = 1 << 10
     };
 
     enum FragScreen
@@ -36,7 +37,8 @@ namespace FX
         SCREEN_TEX_RGB_SPLIT    = 1 << 2,
         SCREEN_RECTANGLES       = 1 << 3,
         SCREEN_DISTORTION       = 1 << 4,
-        SCREEN_K7               = 1 << 5
+        SCREEN_K7               = 1 << 5,
+        SCREEN_PIXELIZE         = 1 << 6
     };
 
     template<typename T>

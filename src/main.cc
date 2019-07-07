@@ -120,6 +120,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::TOONIFY);
     if (key == GLFW_KEY_H && action == GLFW_PRESS)
         toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::HORRORIFY);
+    if (key == GLFW_KEY_J && action == GLFW_PRESS)
+        toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::PIXELIZE);
 
     // Fragment screen
     if (key == GLFW_KEY_Z && action == GLFW_PRESS)
@@ -134,6 +136,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         toggle(fx_factory.frag_screen, FX::FragScreen::SCREEN_DISTORTION);
     if (key == GLFW_KEY_N && action == GLFW_PRESS)
         toggle(fx_factory.frag_screen, FX::FragScreen::SCREEN_K7);
+    if (key == GLFW_KEY_M && action == GLFW_PRESS)
+        toggle(fx_factory.frag_screen, FX::FragScreen::SCREEN_PIXELIZE);
 
     std::cout << "current model = " << fx_factory.current_model << std::endl
               << "frag_render = " << fx_factory.frag_renders[fx_factory.current_model] << std::endl
@@ -220,6 +224,7 @@ int main()
                                                    "../shaders/fragment/edge.glsl",
                                                    "../shaders/fragment/hsv.glsl",
                                                    "../shaders/fragment/horror.glsl",
+                                                   "../shaders/fragment/pixelize.glsl",
                                                    "../shaders/fragment/all.glsl"};
     Program program_classic(vertex_paths, fragment_paths);
 
@@ -233,6 +238,7 @@ int main()
                                                      "../shaders/fragment/edge.glsl",
                                                      "../shaders/fragment/hsv.glsl",
                                                      "../shaders/fragment/horror.glsl",
+                                                     "../shaders/fragment/pixelize.glsl",
                                                      "../shaders/fragment/all-undefined.glsl"};
     Program program_undefined(vertex_paths, fragment_paths_u);
 
@@ -244,6 +250,7 @@ int main()
                                                           "../shaders/fragment/screen/distortion.glsl",
                                                           "../shaders/fragment/screen/rectangles.glsl",
                                                           "../shaders/fragment/screen/k7.glsl",
+                                                          "../shaders/fragment/screen/pixelize.glsl",
                                                           "../shaders/fragment/screen/all.glsl"};
     Program program_screen_classic(screen_vertex_paths, screen_fragment_paths);
 
@@ -254,6 +261,7 @@ int main()
                                                                     "../shaders/fragment/screen/distortion.glsl",
                                                                     "../shaders/fragment/screen/rectangles.glsl",
                                                                     "../shaders/fragment/screen/k7.glsl",
+                                                                    "../shaders/fragment/screen/pixelize.glsl",
                                                                     "../shaders/fragment/screen/all-undefined.glsl"};
     Program program_screen_undefined(screen_vertex_paths, screen_fragment_paths_undefined);
 

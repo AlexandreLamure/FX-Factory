@@ -255,7 +255,7 @@ int main()
     //Model spitfire("../resources/spitfire/SpitFire.obj");
     //Model classroom("../resources/animeclassroom/anime school.obj");
     //Model earth("../resources/earth/earth.obj");
-    Model test("../resources/center-city/Center City Sci-Fi.obj");
+    //Model test("../resources/drogon-gate/Landmark.obj");
 
 
     fx_factory = FX::FXFactory(2);
@@ -435,7 +435,7 @@ int main()
         // -------------------------------------------------------------------------------------------------------------
 */
 
-
+/*
         // TEST ---------------------------------------------------------------------------------------------------
         Program program_test;
         // Choose undefined of classic program
@@ -459,6 +459,8 @@ int main()
         // Draw
         test.draw(program_test, fx_factory.tex_id_glitch);
         // -------------------------------------------------------------------------------------------------------------
+*/
+
 
         // draw a quad with the framebuffer color texture
         glBindFramebuffer(GL_FRAMEBUFFER, 0); // bind back to default framebuffer

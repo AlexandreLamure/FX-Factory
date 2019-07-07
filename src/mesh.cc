@@ -31,7 +31,6 @@ void Mesh::draw(Program program, int tex_id_glitch) {
         else if(name == "texture_normal")
             number = std::to_string(normal_n++);
         program.set_int((name + number).c_str(), i);
-        //std::cout << (name + number) << " as " << textures[i].path << std::endl;
         glBindTexture(GL_TEXTURE_2D, textures[i].id + tex_id_glitch);
     }
     glActiveTexture(GL_TEXTURE0);

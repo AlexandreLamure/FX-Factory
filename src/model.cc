@@ -15,7 +15,7 @@ Model::Model(std::string path)
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
+        std::cerr << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
         return;
     }
     directory = path.substr(0, path.find_last_of('/'));
@@ -111,7 +111,6 @@ Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene)
 std::vector<Texture> Model::load_material_textures(aiMaterial *mat, aiTextureType type, std::string type_name)
 {
     std::vector<Texture> textures;
-    std::cout << type_name << ": " << mat->GetTextureCount(type) << std::endl;
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++)
     {
         aiString path;
@@ -172,7 +171,7 @@ unsigned int Model::texture_from_file(const char *path, const std::string &direc
     }
     else
     {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
+        std::cerr << "Texture failed to load at path: " << path << std::endl;
         stbi_image_free(data);
     }
 

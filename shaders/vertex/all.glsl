@@ -67,7 +67,7 @@ void main()
     interpolated_pos = model * vec4(pos, 1);
     interpolated_normal = mat3(transpose(inverse(model))) * normal; // we only keep the scale and rotations from model matrix
 
-    /* FIXME : normal maps
+    /*
     vec3 T = normalize(vec3(model * vec4(tangent, 0.0)));
     vec3 B = normalize(vec3(model * vec4(bitangent, 0.0)));
     vec3 N = normalize(vec3(model * vec4(normal, 0.0)));

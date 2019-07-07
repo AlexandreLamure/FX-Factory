@@ -126,6 +126,6 @@ vec4 toonify(vec4 color_org)
     hsv.z = nearest_level(hsv.z, 2);
 
     vec3 rgb = HSVtoRGB(hsv);
-    rgb.g = rgb.g / 1.2//mix(rgb.g, color_org.g, 0.7);
+    //rgb.g = mix(rgb.g, color_org.g, 0.7);
     return vec4(rgb, color_org.a);
 }

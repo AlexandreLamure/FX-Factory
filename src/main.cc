@@ -178,8 +178,8 @@ void set_uniforms(Program& program, int window_w, int window_h, float total_time
 int main()
 {
     // window variables
-    int window_w = 800;
-    int window_h = 600;
+    int window_w = 1200;
+    int window_h = 1000;
 
     // time variables
     float total_time = 0.f;
@@ -351,8 +351,8 @@ int main()
         // Set classic uniforms
         set_uniforms(program_background, window_w, window_h, total_time, delta_time);
         // set FX
-        program_background.set_int("FXVertex", fx_factory.vertex_renders[0]);
-        program_background.set_int("FXFrag", fx_factory.frag_renders[0]);
+        program_background.set_int("FXVertex", fx_factory.vertex_renders[1]);
+        program_background.set_int("FXFrag", fx_factory.frag_renders[1]);
         // set Model matrix
         model_mat = glm::mat4(1.f);
         model_mat = glm::translate(model_mat, glm::vec3(-0.3, -10.f, -3.f));

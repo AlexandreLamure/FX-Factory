@@ -43,7 +43,7 @@ vec4 rectangles(vec2 uv,
 sampler2D screen_texture,
 float total_time,
 int rand,
-vec4 color_org, bool colorize);
+vec4 color_org);
 
 vec4 k7(vec2 uv,
 sampler2D screen_texture,
@@ -90,7 +90,7 @@ void main()
     screen_texture,
     total_time,
     rand,
-    output_color, false);
+    output_color);
 */
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */

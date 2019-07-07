@@ -15,7 +15,7 @@ uniform vec2 resolution;
 uniform int mesh_id;
 uniform int rand;
 
-uniform int FX;
+uniform int FXFrag;
 
 #define PI = 3.1415926535;
 
@@ -54,18 +54,18 @@ int rand);
 vec4 compute_texel(vec2 uv)
 {
 /*
-    if (bool(FX & TEX_RGB_SPLIT))
+    if (bool(FXFrag & TEX_RGB_SPLIT))
     return tex_rgb_split(uv,
     screen_texture,
     total_time,
     rand,
     false);
-    else if (bool(FX & DISTORTION))
+    else if (bool(FXFrag & DISTORTION))
     return distortion(uv,
     screen_texture,
     total_time,
     rand);
-    else if (bool(FX & K7))
+    else if (bool(FXFrag & K7))
     return k7(uv,
     screen_texture,
     total_time, resolution,
@@ -79,13 +79,13 @@ void main()
 {
     vec2 uv = interpolated_tex_coords;
 
-    if (bool(FX & TEX_BEFORE))
+    if (bool(FXFrag & TEX_BEFORE))
     output_color *= compute_texel(uv);
 
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
 /*
-    if (bool(FX & RECTANGLES))
+    if (bool(FXFrag & RECTANGLES))
     output_color = rectangles(uv,
     screen_texture,
     total_time,
@@ -95,7 +95,7 @@ void main()
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
 /*
-    if (!bool(FX & TEX_BEFORE))
+    if (!bool(FXFrag & TEX_BEFORE))
     output_color *= compute_texel(uv);
 */
 }

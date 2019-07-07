@@ -22,7 +22,7 @@ uniform vec3 camera_pos;
 uniform int mesh_id;
 uniform int rand;
 
-uniform int FX;
+uniform int FXFrag;
 
 #define PI = 3.1415926535;
 
@@ -78,13 +78,13 @@ vec4 horrorify(vec2 uv,
 vec4 compute_texel(vec2 uv)
 {
 
-    if (bool(FX & TEX_MOVE_GLITCH))
+    if (bool(FXFrag & TEX_MOVE_GLITCH))
         return tex_move_glitch(uv,
                                texture_diffuse1,
                                total_time,
                                mesh_id, rand,
                                1);
-    else if (bool(FX & TEX_RGB_SPLIT))
+    else if (bool(FXFrag & TEX_RGB_SPLIT))
         return tex_rgb_split(uv,
                              texture_diffuse1,
                              total_time,
@@ -99,28 +99,28 @@ void main()
 
     vec2 uv = interpolated_tex_coords;
 
-    if (bool(FX & TEX_MOVE))
+    if (bool(FXFrag & TEX_MOVE))
         uv += 0.1 * total_time;
 
-    if (bool(FX & TEX_BEFORE))
+    if (bool(FXFrag & TEX_BEFORE))
         output_color *= compute_texel(uv);
 
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
 
-    if (bool(FX & COLORIZE))
+    if (bool(FXFrag & COLORIZE))
         output_color = colorize(interpolated_pos, interpolated_normal,
                                 total_time,
                                 mesh_id, rand,
                                 output_color, 3);
 
-    if (bool(FX & EDGE_ENHANCE))
+    if (bool(FXFrag & EDGE_ENHANCE))
         output_color = edge_enhance(uv,
                                     texture_diffuse1,
                                     total_time,
                                     output_color, 0.55, true);
 
-    if (bool(FX & COMPUTE_LIGHT))
+    if (bool(FXFrag & COMPUTE_LIGHT))
         output_color = compute_lights(interpolated_pos, interpolated_normal,
                                       ambient_light_color,
                                       light1_color, light1_position,
@@ -129,13 +129,13 @@ void main()
                                       output_color);
 
 
-    if (bool(FX & TOONIFY))
+    if (bool(FXFrag & TOONIFY))
     {
         output_color = toonify(output_color);
         output_color = edge_enhance(uv, texture_diffuse1, total_time, output_color, 0.35, false);
     }
 
-    if (bool(FX & HORRORIFY))
+    if (bool(FXFrag & HORRORIFY))
         output_color = horrorify(uv,
                                  texture_diffuse1,
                                  total_time,
@@ -146,6 +146,6 @@ void main()
     /* ------------------------------------------------------- */
 
 
-    if (!bool(FX & TEX_BEFORE))
+    if (!bool(FXFrag & TEX_BEFORE))
         output_color *= compute_texel(uv);
 }

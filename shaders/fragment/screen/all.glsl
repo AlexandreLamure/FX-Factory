@@ -9,10 +9,12 @@ uniform sampler2D screen_texture;
 uniform float total_time;
 uniform vec2 resolution;
 
+uniform vec3 camera_pos;
 uniform int mesh_id;
 uniform int rand;
 
 uniform int FXFrag;
+uniform int factory_level_screen;
 
 #define PI = 3.1415926535;
 
@@ -48,26 +50,36 @@ vec4 k7(vec2 uv,
         vec2 resolution,
         int rand);
 
-vec4 compute_texel(vec2 uv)
+vec4 compute_texel(vec2 uv, int FX)
 {
-    if (bool(FXFrag & TEX_RGB_SPLIT))
-        return tex_rgb_split(uv,
-                             screen_texture,
-                             total_time,
-                             rand,
-                             false);
-    else if (bool(FXFrag & DISTORTION))
-        return distortion(uv,
-                          screen_texture,
-                          total_time,
-                          rand);
-    else if (bool(FXFrag & K7))
-        return k7(uv,
-                  screen_texture,
-                  total_time, resolution,
-                  rand);
+    if (bool(FX & TEX_RGB_SPLIT))
+        return tex_rgb_split(uv, screen_texture, total_time, rand, false);
+    else if (bool(FX & DISTORTION))
+        return distortion(uv, screen_texture, total_time, rand);
+    else if (bool(FX & K7))
+        return k7(uv, screen_texture, total_time, resolution, rand);
     else
         return texture(screen_texture, uv);
+}
+
+vec4 apply_effects(vec2 uv, vec4 output_color, int FX)
+{
+    if (bool(FX & TEX_BEFORE))
+        output_color *= compute_texel(uv, FX);
+
+    /* ------------------------------------------------------- */
+    /* ------------------------------------------------------- */
+
+    if (bool(FX & RECTANGLES))
+        output_color = rectangles(uv, screen_texture, total_time, rand, output_color);
+
+    /* ------------------------------------------------------- */
+    /* ------------------------------------------------------- */
+
+    if (!bool(FX & TEX_BEFORE))
+        output_color *= compute_texel(uv, FX);
+
+    return output_color;
 }
 
 void main()
@@ -76,22 +88,28 @@ void main()
 
     vec2 uv = interpolated_tex_coords;
 
-    if (bool(FXFrag & TEX_BEFORE))
-        output_color *= compute_texel(uv);
-
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
 
-    if (bool(FXFrag & RECTANGLES))
-        output_color = rectangles(uv,
-                                  screen_texture,
-                                  total_time,
-                                  rand,
-                                  output_color);
+    int nb_loop = 1;
+    int FX = FXFrag;
 
-    /* ------------------------------------------------------- */
-    /* ------------------------------------------------------- */
+    if (factory_level_screen != 0)
+    nb_loop = 3;
 
-    if (!bool(FXFrag & TEX_BEFORE))
-        output_color *= compute_texel(uv);
+    for (int i = 0; i < nb_loop; ++i)
+    {
+        if (factory_level_screen == 1)
+            FX = int(abs(cos(uv.y * i)) * (1 << 6));
+        else if (factory_level_screen == 2)
+            FX = int(abs(cos(uv.x * i)) * (1 << 6));
+        else if (factory_level_screen == 3)
+            FX = int(abs(cos(length(uv - 0.5) * i)) * (1 << 6));
+        else if (factory_level_screen == 4)
+            FX = int(abs(cos(length(camera_pos / 200))) * (1 << 6));
+        else if (factory_level_screen == 5)
+            FX = int(abs(cos(rand * i)) * (1 << 6));
+
+        output_color = apply_effects(uv, output_color, FX);
+    }
 }

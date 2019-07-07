@@ -23,6 +23,7 @@ uniform int mesh_id;
 uniform int rand;
 
 uniform int FXFrag;
+uniform int factory_level_render;
 
 #define PI = 3.1415926535;
 
@@ -75,22 +76,57 @@ vec4 horrorify(vec2 uv,
                vec4 color_org, bool colorize);
 
 
-vec4 compute_texel(vec2 uv)
+vec4 compute_texel(vec2 uv, int FX)
 {
 
-    if (bool(FXFrag & TEX_MOVE_GLITCH))
-        return tex_move_glitch(uv,
-                               texture_diffuse1,
-                               total_time,
-                               mesh_id, rand,
-                               1);
-    else if (bool(FXFrag & TEX_RGB_SPLIT))
-        return tex_rgb_split(uv,
-                             texture_diffuse1,
-                             total_time,
-                             rand);
+    if (bool(FX & TEX_MOVE_GLITCH))
+        return tex_move_glitch(uv, texture_diffuse1, total_time, mesh_id, rand, 1);
+    else if (bool(FX & TEX_RGB_SPLIT))
+        return tex_rgb_split(uv, texture_diffuse1, total_time, rand);
     else
         return texture(texture_diffuse1, uv);
+}
+
+vec4 apply_effects(vec2 uv, vec4 output_color, int FX)
+{
+    if (bool(FX & TEX_MOVE))
+        uv += 0.1 * total_time;
+
+    if (bool(FX & TEX_BEFORE))
+        output_color *= compute_texel(uv, FX);
+
+    /* ------------------------------------------------------- */
+    /* ------------------------------------------------------- */
+
+    if (bool(FX & COLORIZE))
+        output_color = colorize(interpolated_pos, interpolated_normal, total_time, mesh_id, rand, output_color, 3);
+
+    if (bool(FX & EDGE_ENHANCE))
+        output_color = edge_enhance(uv, texture_diffuse1, total_time, output_color, 0.55, true);
+
+    if (bool(FX & COMPUTE_LIGHT))
+        output_color = compute_lights(interpolated_pos, interpolated_normal,
+                                      ambient_light_color, light1_color, light1_position, light2_color, light2_position,
+                                      camera_pos, output_color);
+
+
+    if (bool(FX & TOONIFY))
+    {
+        output_color = toonify(output_color);
+        output_color = edge_enhance(uv, texture_diffuse1, total_time, output_color, 0.35, false);
+    }
+
+    if (bool(FX & HORRORIFY))
+        output_color = horrorify(uv, texture_diffuse1, total_time, mesh_id, rand, output_color, true);
+
+    /* ------------------------------------------------------- */
+    /* ------------------------------------------------------- */
+
+
+    if (!bool(FX & TEX_BEFORE))
+        output_color *= compute_texel(uv, FX);
+
+    return output_color;
 }
 
 void main()
@@ -99,53 +135,28 @@ void main()
 
     vec2 uv = interpolated_tex_coords;
 
-    if (bool(FXFrag & TEX_MOVE))
-        uv += 0.1 * total_time;
-
-    if (bool(FXFrag & TEX_BEFORE))
-        output_color *= compute_texel(uv);
-
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
 
-    if (bool(FXFrag & COLORIZE))
-        output_color = colorize(interpolated_pos, interpolated_normal,
-                                total_time,
-                                mesh_id, rand,
-                                output_color, 3);
+    int nb_loop = 1;
+    int FX = FXFrag;
 
-    if (bool(FXFrag & EDGE_ENHANCE))
-        output_color = edge_enhance(uv,
-                                    texture_diffuse1,
-                                    total_time,
-                                    output_color, 0.55, true);
+    if (factory_level_render != 0)
+        nb_loop = 3;
 
-    if (bool(FXFrag & COMPUTE_LIGHT))
-        output_color = compute_lights(interpolated_pos, interpolated_normal,
-                                      ambient_light_color,
-                                      light1_color, light1_position,
-                                      light2_color, light2_position,
-                                      camera_pos,
-                                      output_color);
-
-
-    if (bool(FXFrag & TOONIFY))
+    for (int i = 0; i < nb_loop; ++i)
     {
-        output_color = toonify(output_color);
-        output_color = edge_enhance(uv, texture_diffuse1, total_time, output_color, 0.35, false);
+        if (factory_level_render == 1)
+            FX = int(abs(cos(uv.y * i)) * (1 << 10));
+        else if (factory_level_render == 2)
+            FX = int(abs(cos(uv.x * i)) * (1 << 10));
+        else if (factory_level_render == 3)
+            FX = int(abs(cos(length(uv - 0.5) * i)) * (1 << 10));
+        else if (factory_level_render == 4)
+            FX = int(abs(cos(length(camera_pos / 200))) * (1 << 10));
+        else if (factory_level_render == 5)
+            FX = int(abs(cos(rand * i)) * (1 << 10));
+
+        output_color = apply_effects(uv, output_color, FX);
     }
-
-    if (bool(FXFrag & HORRORIFY))
-        output_color = horrorify(uv,
-                                 texture_diffuse1,
-                                 total_time,
-                                 mesh_id, rand,
-                                 output_color, true);
-
-    /* ------------------------------------------------------- */
-    /* ------------------------------------------------------- */
-
-
-    if (!bool(FXFrag & TEX_BEFORE))
-        output_color *= compute_texel(uv);
 }

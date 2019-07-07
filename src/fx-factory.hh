@@ -64,6 +64,8 @@ namespace FX
         std::vector<VertexRender> vertex_renders;
         std::vector<FragRender> frag_renders;
         FragScreen frag_screen;
+        int factory_level_render;
+        int factory_level_screen;
         int current_model;
         int tex_id_glitch;
 

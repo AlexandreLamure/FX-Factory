@@ -16,6 +16,8 @@ namespace FX
             frag_renders[i] = FragRender::COMPUTE_LIGHT | FragRender::TEX_BEFORE;
 
         frag_screen = FragScreen::SCREEN_TEX_BEFORE;
+        factory_level_render = 0;
+        factory_level_screen = 0;
         current_model = 0;
         tex_id_glitch = 0;
     }

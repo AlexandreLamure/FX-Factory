@@ -83,6 +83,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if (key == GLFW_KEY_2 && action == GLFW_PRESS)
         fx_factory.current_model = 1;
 
+    // Set Factory level
+    if (key == GLFW_KEY_UP && action == GLFW_PRESS)
+        fx_factory.factory_level_render += 1;
+    if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+        fx_factory.factory_level_render -= 1;
+    if (key == GLFW_KEY_PAGE_UP && action == GLFW_PRESS)
+        fx_factory.factory_level_screen += 1;
+    if (key == GLFW_KEY_PAGE_DOWN && action == GLFW_PRESS)
+        fx_factory.factory_level_screen -= 1;
+
     // Vertex render
     if (key == GLFW_KEY_0 && action == GLFW_PRESS)
         toggle(fx_factory.vertex_renders[fx_factory.current_model], FX::VertexRender::TEX_TRANSPOSE);
@@ -329,6 +339,7 @@ int main()
         // set FX
         program_samus.set_int("FXVertex", fx_factory.vertex_renders[0]);
         program_samus.set_int("FXFrag", fx_factory.frag_renders[0]);
+        program_samus.set_int("factory_level_render", fx_factory.factory_level_render);
         // set Model matrix
         glm::mat4 model_mat = glm::mat4(1.f);
         model_mat = glm::translate(model_mat, glm::vec3(-0.3, -10.f, -3.f));
@@ -353,6 +364,7 @@ int main()
         // set FX
         program_background.set_int("FXVertex", fx_factory.vertex_renders[1]);
         program_background.set_int("FXFrag", fx_factory.frag_renders[1]);
+        program_background.set_int("factory_level_render", fx_factory.factory_level_render);
         // set Model matrix
         model_mat = glm::mat4(1.f);
         model_mat = glm::translate(model_mat, glm::vec3(-0.3, -10.f, -3.f));
@@ -400,6 +412,7 @@ int main()
         program_screen.set_int("screen_texture", 0);
         // set FX
         program_screen.set_int("FXFrag", fx_factory.frag_screen);
+        program_screen.set_int("factory_level_screen", fx_factory.factory_level_screen);
         // Draw
         glBindVertexArray(quadVAO);
         glBindTexture(GL_TEXTURE_2D, texture_color_buffer);	// use the color attachment texture as the texture of the quad plane

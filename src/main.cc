@@ -71,11 +71,21 @@ void toggle(T& a, T b)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    // Change texture id loading
+    if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
+        fx_factory.tex_id_glitch++;
+    if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
+        fx_factory.tex_id_glitch--;
+
     // Change selected model
     if (key == GLFW_KEY_1 && action == GLFW_PRESS)
         fx_factory.current_model = 0;
-    else if (key == GLFW_KEY_2 && action == GLFW_PRESS)
+    if (key == GLFW_KEY_2 && action == GLFW_PRESS)
         fx_factory.current_model = 1;
+
+    // Vertex render
+    if (key == GLFW_KEY_0 && action == GLFW_PRESS)
+        toggle(fx_factory.vertex_renders[fx_factory.current_model], FX::VertexRender::TEX_TRANSPOSE);
 
     // Fragment render
     if (key == GLFW_KEY_E && action == GLFW_PRESS)
@@ -184,7 +194,8 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
     glfwSetKeyCallback(window, key_callback);
 
-    auto vertex_paths = std::vector<const char*>{"../shaders/vertex/basic.glsl"};
+    auto vertex_paths = std::vector<const char*>{"../shaders/vertex/tex-transpose.glsl",
+                                                 "../shaders/vertex/all.glsl"};
     auto fragment_paths = std::vector<const char*>{"../shaders/random.glsl",
                                                    "../shaders/fragment/compute-lights.glsl",
                                                    "../shaders/fragment/tex-move.glsl",
@@ -316,14 +327,15 @@ int main()
         // Set classic uniforms
         set_uniforms(program_samus, window_w, window_h, total_time, delta_time);
         // set FX
-        program_samus.set_int("FX", fx_factory.frag_renders[0]);
+        program_samus.set_int("FXVertex", fx_factory.vertex_renders[0]);
+        program_samus.set_int("FXFrag", fx_factory.frag_renders[0]);
         // set Model matrix
         glm::mat4 model_mat = glm::mat4(1.f);
         model_mat = glm::translate(model_mat, glm::vec3(-0.3, -10.f, -3.f));
         model_mat = glm::rotate(model_mat, total_time * glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f));
         program_samus.set_mat4("model", model_mat);
         // Draw
-        samus.draw(program_samus);
+        samus.draw(program_samus, fx_factory.tex_id_glitch);
         // -------------------------------------------------------------------------------------------------------------
 
 
@@ -339,13 +351,14 @@ int main()
         // Set classic uniforms
         set_uniforms(program_background, window_w, window_h, total_time, delta_time);
         // set FX
-        program_samus.set_int("FX", fx_factory.frag_renders[1]);
+        program_background.set_int("FXVertex", fx_factory.vertex_renders[0]);
+        program_background.set_int("FXFrag", fx_factory.frag_renders[0]);
         // set Model matrix
         model_mat = glm::mat4(1.f);
         model_mat = glm::translate(model_mat, glm::vec3(-0.3, -10.f, -3.f));
         program_background.set_mat4("model", model_mat);
         // Draw
-        background.draw(program_background);
+        background.draw(program_background, fx_factory.tex_id_glitch);
         // -------------------------------------------------------------------------------------------------------------
 
 
@@ -386,7 +399,7 @@ int main()
         set_uniforms(program_screen, window_w, window_h, total_time, delta_time);
         program_screen.set_int("screen_texture", 0);
         // set FX
-        program_screen.set_int("FX", fx_factory.frag_screen);
+        program_screen.set_int("FXFrag", fx_factory.frag_screen);
         // Draw
         glBindVertexArray(quadVAO);
         glBindTexture(GL_TEXTURE_2D, texture_color_buffer);	// use the color attachment texture as the texture of the quad plane

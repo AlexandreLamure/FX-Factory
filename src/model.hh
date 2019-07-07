@@ -26,7 +26,7 @@ private:
 public:
     Model(std::string path);
 
-    void draw(Program shader);
+    void draw(Program shader, int tex_id_glitch = 0);
 };
 
 

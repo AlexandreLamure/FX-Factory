@@ -168,11 +168,11 @@ unsigned int Model::texture_from_file(const char *path, const std::string &direc
     return texture_id;
 }
 
-void Model::draw(Program program)
+void Model::draw(Program program, int tex_id_glitch)
 {
     for(unsigned int i = 0; i < meshes.size(); i++)
     {
         program.set_int("mesh_id", i);
-        meshes[i].draw(program);
+        meshes[i].draw(program, tex_id_glitch);
     }
 }

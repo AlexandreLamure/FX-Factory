@@ -11,7 +11,8 @@ namespace FX
 {
     enum VertexRender
     {
-        TEX_TRANSPOSE           = 1 << 0
+        TEX_TRANSPOSE           = 1 << 0,
+        WATER                   = 1 << 1
     };
 
     enum FragRender

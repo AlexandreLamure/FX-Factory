@@ -40,6 +40,10 @@ const int TOONIFY                = 1 << 8; // G
 const int HORRORIFY              = 1 << 9; // H
 
 
+float snoise(vec2 v);
+float snoise(vec3 v);
+float snoise(vec4 v);
+
 vec4 tex_move_glitch(vec2 uv,
                      sampler2D texture_diffuse1,
                      float total_time,
@@ -166,6 +170,4 @@ void main()
 
         output_color = apply_effects(uv, normal, output_color, FX);
     }
-
-    //output_color.rgb = normal;
 }

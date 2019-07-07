@@ -23,21 +23,31 @@ uniform int FXVertex;
 uniform int factory_level_render;
 
 const int TEX_TRANSPOSE          = 1 << 0; // 0
+const int WATER                  = 1 << 1; // 9
+
+float triangle(float x);
+vec2 circle(float x);
+float snoise(vec2 v);
+float snoise(vec3 v);
+float snoise(vec4 v);
+
+vec3 water(vec3 position, vec3 normal, float total_time);
 
 vec3 tex_transpose(vec3 position, float total_time, int mesh_id, int rand, float glitch_intensity);
 
-vec3 apply_effects(vec2 uv, vec3 pos, int FX)
+void apply_effects(int FX)
 {
     if (bool(FXVertex & TEX_TRANSPOSE))
-    {
-        pos = tex_transpose(pos, total_time, mesh_id, rand, 0.002);
-    }
-    return pos;
+        interpolated_pos.xyz = tex_transpose(interpolated_pos.xyz, total_time, mesh_id, rand, 0.002);
+    if (bool(FXVertex & WATER))
+        interpolated_normal = water(position, normal, total_time);
 }
 
 void main()
 {
-    vec3 pos = position;
+    interpolated_pos = model * vec4(position, 1);
+    interpolated_normal = mat3(transpose(inverse(model))) * normal; // we only keep the scale and rotations from model matrix
+    interpolated_tex_coords = tex_coords;
 
     int nb_loop = 1;
     int FX = FXVertex;
@@ -58,14 +68,12 @@ void main()
         else if (factory_level_render == 5)
             FX = int(abs(cos(rand * i)) * (1 << 1));
 
-        pos = apply_effects(tex_coords, pos, FX);
+        apply_effects(FX);
     }
 
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
 
-    interpolated_pos = model * vec4(pos, 1);
-    interpolated_normal = mat3(transpose(inverse(model))) * normal; // we only keep the scale and rotations from model matrix
 
     /*
     vec3 T = normalize(vec3(model * vec4(tangent, 0.0)));
@@ -77,5 +85,4 @@ void main()
 
     gl_Position = projection * view * interpolated_pos;
 
-    interpolated_tex_coords = tex_coords;
 }

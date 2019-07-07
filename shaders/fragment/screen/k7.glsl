@@ -1,10 +1,10 @@
 #version 430
 
-//#define BLACK_AND_WHITE  // FIXME: make it a line that goes down the screen
+//#define BLACK_AND_WHITE
 #define LINES_AND_FLICKER
 #define BLOTCHES
-//#define GRAIN
-//#define DESCENT
+#define GRAIN
+#define DESCENT
 
 float randf(vec2 seed);
 float randf(float seed);
@@ -106,7 +106,7 @@ vec4 k7(vec2 uv,
     output_color.rgb *= glitch_coef;
 
     #ifdef GRAIN
-    output_color.xyz *= (0.9 + (randf(uv + float(rand) / 1000)) * 0.45);
+    output_color.xyz *= (0.9 + (randf(uv + float(rand) / 1000)) * 0.35);
     #endif
 
     return output_color;

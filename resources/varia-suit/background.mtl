@@ -11,6 +11,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd background.png
+map_Bump background-normal.png
 
 newmtl Cube
 Ns 92.156863
@@ -44,6 +45,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd guisne_t.png
+map_Bump guisne_t-normal.png
 
 newmtl Wall
 Ns 0.000000
@@ -55,3 +57,4 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd ground.jpg
+map_Bump ground-normal.png

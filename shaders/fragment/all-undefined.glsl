@@ -152,11 +152,10 @@ void main()
     vec2 uv = interpolated_tex_coords;
 
     vec3 normal = interpolated_normal;
-    /* TODO : get better normal maps or set flags to activate it
     normal = texture(texture_normal1, uv).rgb;
     normal = normalize(normal * 2.0 - 1.0);
     normal = normalize(TBN * normal);
-    */
+
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
 

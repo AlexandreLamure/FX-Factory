@@ -71,6 +71,16 @@ void toggle(T& a, T b)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    // reset FX
+    if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS)
+    {
+        fx_factory.tex_id_glitch = 0;
+        fx_factory.factory_level_render = 0;
+        fx_factory.vertex_renders[fx_factory.current_model] = (FX::VertexRender)0;
+        fx_factory.frag_renders[fx_factory.current_model] = FX::FragRender::COMPUTE_LIGHT | FX::FragRender::TEX_BEFORE;
+        fx_factory.frag_screen = FX::FragScreen::SCREEN_TEX_BEFORE;
+    }
+
     // Change texture id loading
     if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
         fx_factory.tex_id_glitch++;

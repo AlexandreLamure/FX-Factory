@@ -39,8 +39,6 @@ void apply_effects(int FX)
 {
     if (bool(FXVertex & TEX_TRANSPOSE))
         interpolated_pos.xyz = tex_transpose(interpolated_pos.xyz, total_time, mesh_id, rand, 0.002);
-    if (bool(FXVertex & WATER))
-        interpolated_normal = water(position, normal, total_time);
 }
 
 void main()
@@ -78,6 +76,8 @@ void main()
     vec3 T = normalize(vec3(model * vec4(tangent, 0.0)));
     vec3 B = normalize(vec3(model * vec4(bitangent, 0.0)));
     vec3 N = normalize(vec3(model * vec4(normal, 0.0)));
+    if (factory_level_render == 0 && bool(FXVertex & WATER)) // Deactivated water effect in random fx mode
+        N = water(position, N, total_time);
     T = normalize(T - dot(T, N) * N);
     TBN = mat3(T, B, N);
 

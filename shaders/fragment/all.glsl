@@ -85,6 +85,7 @@ vec4 pixelize(vec2 uv,
               sampler2D texture_diffuse1,
               float total_time);
 
+vec2 uv;
 
 vec4 compute_texel(vec2 uv, int FX)
 {
@@ -95,12 +96,11 @@ vec4 compute_texel(vec2 uv, int FX)
         return tex_rgb_split(uv, texture_diffuse1, total_time, rand);
     else if (bool(FX & PIXELIZE))
         return pixelize(uv, texture_diffuse1, total_time);
-
-else
+    else
         return texture(texture_diffuse1, uv);
 }
 
-vec4 apply_effects(vec2 uv, vec3 normal, vec4 output_color, int FX)
+vec4 apply_effects(vec4 output_color, int FX)
 {
     if (bool(FX & TEX_MOVE))
         uv += 0.1 * total_time;
@@ -108,6 +108,10 @@ vec4 apply_effects(vec2 uv, vec3 normal, vec4 output_color, int FX)
     if (bool(FX & TEX_BEFORE))
         output_color *= compute_texel(uv, FX);
 
+    vec3 normal = interpolated_normal;
+    normal = texture(texture_normal1, uv).rgb;
+    normal = normalize(normal * 2.0 - 1.0);
+    normal = normalize(TBN * normal);
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
 
@@ -146,12 +150,9 @@ void main()
 {
     output_color = vec4(1);
 
-    vec2 uv = interpolated_tex_coords;
+    uv = interpolated_tex_coords;
 
-    vec3 normal = interpolated_normal;
-    normal = texture(texture_normal1, uv).rgb;
-    normal = normalize(normal * 2.0 - 1.0);
-    normal = normalize(TBN * normal);
+
 
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
@@ -175,6 +176,6 @@ void main()
         else if (factory_level_render == 5)
             FX = int(abs(cos(rand * i)) * (1 << 10));
 
-        output_color = apply_effects(uv, normal, output_color, FX);
+        output_color = apply_effects(output_color, FX);
     }
 }

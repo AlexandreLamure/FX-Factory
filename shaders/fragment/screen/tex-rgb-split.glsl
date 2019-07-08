@@ -17,11 +17,11 @@ vec4 tex_rgb_split(vec2 uv,
     vec2 decay;
     if (slow && cos(total_time + rand / 100) < 0.9)
     {
-        const float interval = 3.0;
+        const float interval = cos(total_time / 2);
         float strength = smoothstep(interval * 0.5, interval, interval - mod(total_time, interval));
         float y = uv.y * 10;
 
-        decay = vec2(snoise(vec3(0.0, y, total_time * 4.0)) * (2.0 + strength * 3.0), 0);
+        decay = vec2(snoise(vec3(0.0, y, total_time * .1)) * (2.0 + strength * 3.0), 0);
 
         decay.x *= (
             snoise(vec3(0.0, y, total_time * 400.0)) * (2.0 + strength * 3.0)

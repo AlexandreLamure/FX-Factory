@@ -11,7 +11,7 @@ add_executable(openGL_Glitch
                src/model.cc src/model.hh
                src/camera.cc src/camera.hh
                src/fx-factory.hh src/fx-factory.cc
-               src/main.cc)
+               src/main.cc src/screen.cc src/screen.h)
 
 #OpenGL
 find_package(OpenGL REQUIRED)

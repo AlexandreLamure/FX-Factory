@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <ctime>
+#include <tuple>
 
 #include "init.hh"
 #include "program.hh"
@@ -202,6 +203,17 @@ void set_uniforms(Program& program, int window_w, int window_h, float total_time
     program.set_mat4("projection", projection);
 }
 
+std::pair<std::vector<const char*>, std::vector<const char*>> gen_frag_paths(std::vector<const char*>& frag_paths,
+                                                                                 const char *fragment_main_path,
+                                                                                 const char *fragment_main_undef_path)
+{
+    auto fragment_paths_undef = frag_paths;
+    fragment_paths_undef.push_back(fragment_main_undef_path);
+    frag_paths.push_back(fragment_main_path);
+
+    return std::make_pair(frag_paths, fragment_paths_undef);
+}
+
 int main()
 {
     // window variables
@@ -221,60 +233,55 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
     glfwSetKeyCallback(window, key_callback);
 
-    auto vertex_paths = std::vector<const char*>{"../shaders/tools.glsl",
-                                                 "../shaders/simplex.glsl",
-                                                 "../shaders/vertex/water.glsl",
-                                                 "../shaders/vertex/tex-transpose.glsl",
-                                                 "../shaders/vertex/all.glsl"};
-    auto fragment_paths = std::vector<const char*>{"../shaders/tools.glsl",
-                                                   "../shaders/simplex.glsl",
-                                                   "../shaders/fragment/compute-lights.glsl",
-                                                   "../shaders/fragment/tex-move.glsl",
-                                                   "../shaders/fragment/colorize.glsl",
-                                                   "../shaders/fragment/tex-rgb-split.glsl",
-                                                   "../shaders/fragment/edge.glsl",
-                                                   "../shaders/fragment/hsv.glsl",
-                                                   "../shaders/fragment/horror.glsl",
-                                                   "../shaders/fragment/pixelize.glsl",
-                                                   "../shaders/fragment/all.glsl"};
-    Program program_classic(vertex_paths, fragment_paths);
-
-    // Copy of classic program, with undefined behaviour
-    auto fragment_paths_u = std::vector<const char*>{"../shaders/tools.glsl",
-                                                     "../shaders/simplex.glsl",
-                                                     "../shaders/fragment/compute-lights.glsl",
-                                                     "../shaders/fragment/tex-move.glsl",
-                                                     "../shaders/fragment/colorize.glsl",
-                                                     "../shaders/fragment/tex-rgb-split.glsl",
-                                                     "../shaders/fragment/edge.glsl",
-                                                     "../shaders/fragment/hsv.glsl",
-                                                     "../shaders/fragment/horror.glsl",
-                                                     "../shaders/fragment/pixelize.glsl",
-                                                     "../shaders/fragment/all-undefined.glsl"};
-    Program program_undefined(vertex_paths, fragment_paths_u);
 
 
-    auto screen_vertex_paths = std::vector<const char*>{"../shaders/vertex/screen/basic.glsl"};
-    auto screen_fragment_paths = std::vector<const char*>{"../shaders/tools.glsl",
-                                                          "../shaders/simplex.glsl",
-                                                          "../shaders/fragment/screen/tex-rgb-split.glsl",
-                                                          "../shaders/fragment/screen/distortion.glsl",
-                                                          "../shaders/fragment/screen/rectangles.glsl",
-                                                          "../shaders/fragment/screen/k7.glsl",
-                                                          "../shaders/fragment/screen/pixelize.glsl",
-                                                          "../shaders/fragment/screen/all.glsl"};
-    Program program_screen_classic(screen_vertex_paths, screen_fragment_paths);
 
-    // Copy of classic screen program, with undefined behaviour
-    auto screen_fragment_paths_undefined = std::vector<const char*>{"../shaders/tools.glsl",
-                                                                    "../shaders/simplex.glsl",
-                                                                    "../shaders/fragment/screen/tex-rgb-split.glsl",
-                                                                    "../shaders/fragment/screen/distortion.glsl",
-                                                                    "../shaders/fragment/screen/rectangles.glsl",
-                                                                    "../shaders/fragment/screen/k7.glsl",
-                                                                    "../shaders/fragment/screen/pixelize.glsl",
-                                                                    "../shaders/fragment/screen/all-undefined.glsl"};
-    Program program_screen_undefined(screen_vertex_paths, screen_fragment_paths_undefined);
+    // RENDER SHADERS PATHS --------------------------------------------------------------------------------------------
+    std::vector<const char*> vertex_paths = {"../shaders/tools.glsl",
+                                             "../shaders/simplex.glsl",
+                                             "../shaders/vertex/water.glsl",
+                                             "../shaders/vertex/tex-transpose.glsl",
+                                             "../shaders/vertex/all.glsl"};
+    std::vector<const char*> frag_lib_paths = {"../shaders/tools.glsl",
+                                               "../shaders/simplex.glsl",
+                                               "../shaders/fragment/compute-lights.glsl",
+                                               "../shaders/fragment/tex-move.glsl",
+                                               "../shaders/fragment/colorize.glsl",
+                                               "../shaders/fragment/tex-rgb-split.glsl",
+                                               "../shaders/fragment/edge.glsl",
+                                               "../shaders/fragment/hsv.glsl",
+                                               "../shaders/fragment/horror.glsl",
+                                               "../shaders/fragment/pixelize.glsl"};
+    auto [ frag_paths, frag_paths_u ] = gen_frag_paths(frag_lib_paths,
+                                                       "../shaders/fragment/all.glsl",
+                                                       "../shaders/fragment/all-undefined.glsl");
+    Program program_classic(vertex_paths, frag_paths);
+    Program program_undefined(vertex_paths, frag_paths_u); // Copy of classic program, with undefined behaviour
+    // -----------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+    // SCREEN SHADERS PATHS --------------------------------------------------------------------------------------------
+    std::vector<const char*> screen_vertex_paths = {"../shaders/vertex/screen/basic.glsl"};
+    std::vector<const char*> screen_frag_lib_paths = {"../shaders/tools.glsl",
+                                                      "../shaders/simplex.glsl",
+                                                      "../shaders/fragment/screen/tex-rgb-split.glsl",
+                                                      "../shaders/fragment/screen/distortion.glsl",
+                                                      "../shaders/fragment/screen/rectangles.glsl",
+                                                      "../shaders/fragment/screen/k7.glsl",
+                                                      "../shaders/fragment/screen/pixelize.glsl",
+                                                      "../shaders/fragment/screen/all.glsl"};
+    auto [ screen_frag_paths, screen_frag_paths_u ] = gen_frag_paths(screen_frag_lib_paths,
+                                                                     "../shaders/fragment/screen/all.glsl",
+                                                                     "../shaders/fragment/screen/all-undefined.glsl");
+    Program program_screen_classic(screen_vertex_paths, screen_frag_paths);
+    Program program_screen_undefined(screen_vertex_paths, screen_frag_paths_u); // Copy of classic screen program, with undefined behaviour
+    // -----------------------------------------------------------------------------------------------------------------
+
+
+
 
 
     Model samus("../resources/varia-suit/DolBarriersuit.obj");
@@ -408,18 +415,15 @@ int main()
 
 
 
-
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
 
-    // glfw: terminate, clearing all previously allocated GLFW resources.
+    // clear all previously allocated GLFW resources.
     // ------------------------------------------------------------------
-    //glDeleteVertexArrays(1, &quadVAO);
-    //glDeleteBuffers(1, &quadVBO);
     glfwTerminate();
 
     return 0;

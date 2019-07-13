@@ -237,21 +237,21 @@ int main()
 
 
     // RENDER SHADERS PATHS --------------------------------------------------------------------------------------------
-    std::vector<const char*> vertex_paths = {"../shaders/tools.glsl",
-                                             "../shaders/simplex.glsl",
-                                             "../shaders/vertex/water.glsl",
-                                             "../shaders/vertex/tex-transpose.glsl",
-                                             "../shaders/vertex/all.glsl"};
-    std::vector<const char*> frag_lib_paths = {"../shaders/tools.glsl",
-                                               "../shaders/simplex.glsl",
-                                               "../shaders/fragment/compute-lights.glsl",
-                                               "../shaders/fragment/tex-move.glsl",
-                                               "../shaders/fragment/colorize.glsl",
-                                               "../shaders/fragment/tex-rgb-split.glsl",
-                                               "../shaders/fragment/edge.glsl",
-                                               "../shaders/fragment/hsv.glsl",
-                                               "../shaders/fragment/horror.glsl",
-                                               "../shaders/fragment/pixelize.glsl"};
+    std::vector<const char*> vertex_paths{"../shaders/tools.glsl",
+                                          "../shaders/simplex.glsl",
+                                          "../shaders/vertex/water.glsl",
+                                          "../shaders/vertex/tex-transpose.glsl",
+                                          "../shaders/vertex/all.glsl"};
+    std::vector<const char*> frag_lib_paths{"../shaders/tools.glsl",
+                                            "../shaders/simplex.glsl",
+                                            "../shaders/fragment/compute-lights.glsl",
+                                            "../shaders/fragment/tex-move.glsl",
+                                            "../shaders/fragment/colorize.glsl",
+                                            "../shaders/fragment/tex-rgb-split.glsl",
+                                            "../shaders/fragment/edge.glsl",
+                                            "../shaders/fragment/hsv.glsl",
+                                            "../shaders/fragment/horror.glsl",
+                                            "../shaders/fragment/pixelize.glsl"};
     auto [ frag_paths, frag_paths_u ] = gen_frag_paths(frag_lib_paths,
                                                        "../shaders/fragment/all.glsl",
                                                        "../shaders/fragment/all-undefined.glsl");
@@ -264,15 +264,14 @@ int main()
 
 
     // SCREEN SHADERS PATHS --------------------------------------------------------------------------------------------
-    std::vector<const char*> screen_vertex_paths = {"../shaders/vertex/screen/basic.glsl"};
-    std::vector<const char*> screen_frag_lib_paths = {"../shaders/tools.glsl",
-                                                      "../shaders/simplex.glsl",
-                                                      "../shaders/fragment/screen/tex-rgb-split.glsl",
-                                                      "../shaders/fragment/screen/distortion.glsl",
-                                                      "../shaders/fragment/screen/rectangles.glsl",
-                                                      "../shaders/fragment/screen/k7.glsl",
-                                                      "../shaders/fragment/screen/pixelize.glsl",
-                                                      "../shaders/fragment/screen/all.glsl"};
+    std::vector<const char*> screen_vertex_paths{"../shaders/vertex/screen/basic.glsl"};
+    std::vector<const char*> screen_frag_lib_paths{"../shaders/tools.glsl",
+                                                   "../shaders/simplex.glsl",
+                                                   "../shaders/fragment/screen/tex-rgb-split.glsl",
+                                                   "../shaders/fragment/screen/distortion.glsl",
+                                                   "../shaders/fragment/screen/rectangles.glsl",
+                                                   "../shaders/fragment/screen/k7.glsl",
+                                                   "../shaders/fragment/screen/pixelize.glsl"};
     auto [ screen_frag_paths, screen_frag_paths_u ] = gen_frag_paths(screen_frag_lib_paths,
                                                                      "../shaders/fragment/screen/all.glsl",
                                                                      "../shaders/fragment/screen/all-undefined.glsl");

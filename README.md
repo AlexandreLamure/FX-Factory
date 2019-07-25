@@ -38,7 +38,9 @@ cmake --build . --config Release -j
 **Youtube video:**
  https://youtu.be/0EzgnH4tP0o
  
-<a href="https://i.imgur.com/qzIlRpS.jpg"><img src="https://i.imgur.com/qzIlRpS.jpg" width="380"/></a> <a href="https://i.imgur.com/dChfb7D.jpg"><img src="https://i.imgur.com/dChfb7D.jpg" width="380"/></a>
+ **Some examples:**
+ 
+<a href="https://i.imgur.com/BE9g7IO.jpg"><img src="https://i.imgur.com/BE9g7IO.jpg" width="380"/></a> <a href="https://i.imgur.com/dChfb7D.jpg"><img src="https://i.imgur.com/dChfb7D.jpg" width="380"/></a>
 <a href="https://i.imgur.com/zlOkwuV.jpg"><img src="https://i.imgur.com/zlOkwuV.jpg" width="380"/></a> <a href="https://i.imgur.com/kCmlAbH.jpg"><img src="https://i.imgur.com/kCmlAbH.jpg" width="380"/></a>
 <a href="https://i.imgur.com/dTDITVa.jpg"><img src="https://i.imgur.com/dTDITVa.jpg" width="380"/></a> <a href="https://i.imgur.com/dEk8FcN.jpg"><img src="https://i.imgur.com/dEk8FcN.jpg" width="380"/></a>
 <a href="https://i.imgur.com/GhQjKcZ.jpg"><img src="https://i.imgur.com/GhQjKcZ.jpg" width="380"/></a> <a href="https://i.imgur.com/VNqbOhc.jpg"><img src="https://i.imgur.com/VNqbOhc.jpg" width="380"/></a>

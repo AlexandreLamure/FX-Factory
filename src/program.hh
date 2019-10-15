@@ -18,7 +18,7 @@
 class Program {
 private:
     const char *load(const std::string &filename);
-    void compile(GLuint shader, const char *shader_src);
+    void compile(GLuint shader, const char *shader_src, const char* shader_path);
     void link(const std::vector<GLuint>& vertex_shaders, const std::vector<GLuint>& fragment_shaders);
 
 public:

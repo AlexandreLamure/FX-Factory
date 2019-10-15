@@ -36,7 +36,7 @@ const char *Program::load(const std::string &filename)
     return shader_src;
 }
 
-void Program::compile(GLuint shader, const char *shader_src)
+void Program::compile(GLuint shader, const char *shader_src, const char* shader_path)
 {
     glShaderSource(shader, 1, &shader_src, nullptr); TEST_OPENGL_ERROR();
     glCompileShader(shader); TEST_OPENGL_ERROR();
@@ -48,7 +48,7 @@ void Program::compile(GLuint shader, const char *shader_src)
     if (!success)
     {
         glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-        std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cerr << "ERROR::SHADER::COMPILATION_FAILED: " << shader_path << std::endl << infoLog << std::endl;
         throw std::exception();
     }
 }
@@ -114,9 +114,9 @@ Program::Program(const std::vector<const char*>& vertex_paths, const std::vector
         TEST_OPENGL_ERROR();
     }
     for (int i = 0; i < vertex_shaders.size(); ++i)
-        compile(vertex_shaders[i], vertex_srcs[i]);
+        compile(vertex_shaders[i], vertex_srcs[i], vertex_paths[i]);
     for (int i = 0; i < fragment_shaders.size(); ++i)
-        compile(fragment_shaders[i], fragment_srcs[i]);
+        compile(fragment_shaders[i], fragment_srcs[i], fragment_paths[i]);
     program_id = glCreateProgram(); TEST_OPENGL_ERROR();
 
     link(vertex_shaders, fragment_shaders);

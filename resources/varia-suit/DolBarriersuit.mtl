@@ -10,7 +10,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Ka gun_threads.png
 map_Kd gun_threads.png
+map_Ks gun_threads.png
 map_Bump varia4-normal.png
 
 newmtl mat10
@@ -22,7 +24,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Ka Samus_Varia_High256_Grill_C.png
 map_Kd Samus_Varia_High256_Grill_C.png
+map_Ks Samus_Varia_High256_Grill_C.png
 map_Bump varia6-normal.png
 
 newmtl mat11
@@ -34,7 +38,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Ka Samus_Varia_High128_VisorC.png
 map_Kd Samus_Varia_High128_VisorC.png
+map_Ks Samus_Varia_High128_VisorC.png
 
 newmtl mat12
 Ns 9.803922
@@ -45,7 +51,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Ka Samus_Varia_High128_VisorC.png
 map_Kd Samus_Varia_High128_VisorC.png
+map_Ks Samus_Varia_High128_VisorC.png
 map_Bump varia-normal3.png
 
 newmtl mat2
@@ -92,7 +100,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Ka gun_casing.png
 map_Kd gun_casing.png
+map_Ks gun_casing.png
 map_Bump varia5-normal.png
 
 newmtl mat6
@@ -104,7 +114,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Ka Samus_Varia_High512_C.png
 map_Kd Samus_Varia_High512_C.png
+map_Ks Samus_Varia_High512_C.png
 map_Bump varia-normal.png
 
 newmtl mat7
@@ -116,7 +128,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Ka samus_face.png
 map_Kd samus_face.png
+map_Ks samus_face.png
 
 newmtl mat8
 Ns 9.803922
@@ -127,7 +141,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Ka Samus_Varia_High64_BlendsC.png
 map_Kd Samus_Varia_High64_BlendsC.png
+map_Ks Samus_Varia_High64_BlendsC.png
 map_Bump varia2-normal.png
 
 newmtl mat9
@@ -139,5 +155,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Ka Samus_Varia_High64_Blends2C.png
 map_Kd Samus_Varia_High64_Blends2C.png
+map_Ks Samus_Varia_High64_Blends2C.png
 map_Bump varia7-normal.png

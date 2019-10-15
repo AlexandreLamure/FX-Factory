@@ -4,6 +4,40 @@
 // It is a copy of shader `all.glsl'. You sould NEVER code into.
 
 
+struct Material // Use vec3 instead of sampler2D to avoid expensive copy of data
+{
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+};
+
+struct DirLight
+{
+    vec3 dir;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+struct PointLight
+{
+    vec3 pos;
+
+    float constant;
+    float linear;
+    float quadratic;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+#define NB_DIR_LIGHTS 1
+#define NB_POINT_LIGHTS 2
+
+
 
 in vec4 interpolated_pos;
 in vec3 interpolated_normal;
@@ -13,13 +47,12 @@ in mat3 TBN;
 
 out vec4 output_color;
 
-uniform vec3 ambient_light_color;
-uniform vec3 light1_color;
-uniform vec3 light1_position;
-uniform vec3 light2_color;
-uniform vec3 light2_position;
+uniform DirLight dir_lights[NB_DIR_LIGHTS];
+uniform PointLight point_lights[NB_POINT_LIGHTS];
 
+uniform sampler2D texture_ambient1;
 uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_specular1;
 uniform sampler2D texture_normal1;
 
 uniform float total_time;
@@ -56,12 +89,11 @@ float total_time,
 int mesh_id, int rand,
 int rate);
 
-vec4 compute_lights(vec4 interpolated_pos, vec3 normal,
-vec3 ambient_light_color,
-vec3 light1_color, vec3 light1_position,
-vec3 light2_color, vec3 light2_position,
-vec3 camera_pos,
-vec4 color_org);
+vec4 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
+vec3 camera_pos, vec4 color_org,
+Material material,
+DirLight dir_lights[NB_DIR_LIGHTS],
+PointLight point_lights[NB_POINT_LIGHTS]);
 
 vec4 colorize(vec4 interpolated_pos, vec3 normal,
 float total_time,
@@ -90,22 +122,21 @@ vec4 pixelize(vec2 uv,
 sampler2D texture_diffuse1,
 float total_time);
 
+vec2 uv;
 
 vec4 compute_texel(vec2 uv, int FX)
 {
-
     if (bool(FX & TEX_MOVE_GLITCH))
     return tex_move_glitch(uv, texture_diffuse1, total_time, mesh_id, rand, 1);
     else if (bool(FX & TEX_RGB_SPLIT))
     return tex_rgb_split(uv, texture_diffuse1, total_time, rand);
     else if (bool(FX & PIXELIZE))
     return pixelize(uv, texture_diffuse1, total_time);
-
     else
     return texture(texture_diffuse1, uv);
 }
 
-vec4 apply_effects(vec2 uv, vec3 normal, vec4 output_color, int FX)
+vec4 apply_effects(vec4 output_color, int FX)
 {
     if (bool(FX & TEX_MOVE))
     uv += 0.1 * total_time;
@@ -113,6 +144,10 @@ vec4 apply_effects(vec2 uv, vec3 normal, vec4 output_color, int FX)
     if (bool(FX & TEX_BEFORE))
     output_color *= compute_texel(uv, FX);
 
+    vec3 normal = interpolated_normal;
+    normal = texture(texture_normal1, uv).rgb;
+    normal = normalize(normal * 2.0 - 1.0);
+    normal = normalize(TBN * normal);
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
 
@@ -123,10 +158,19 @@ vec4 apply_effects(vec2 uv, vec3 normal, vec4 output_color, int FX)
     output_color = edge_enhance(uv, texture_diffuse1, total_time, output_color, 0.55, true);
 
     if (bool(FX & COMPUTE_LIGHT))
-    output_color = compute_lights(interpolated_pos, normal,
-    ambient_light_color, light1_color, light1_position, light2_color, light2_position,
-    camera_pos, output_color);
+    {
+        Material material;
+        material.ambient = vec3(texture(texture_ambient1, interpolated_tex_coords));
+        material.diffuse = vec3(texture(texture_diffuse1, interpolated_tex_coords));
+        material.specular = vec3(texture(texture_specular1, interpolated_tex_coords));
+        material.shininess = 1; //FIXME
 
+        output_color = compute_lights(interpolated_pos, interpolated_normal,
+        camera_pos, output_color,
+        material,
+        dir_lights,
+        point_lights);
+    }
 
     if (bool(FX & TOONIFY))
     {
@@ -141,20 +185,15 @@ vec4 apply_effects(vec2 uv, vec3 normal, vec4 output_color, int FX)
     /* ------------------------------------------------------- */
 
 
-    if (!bool(FX & TEX_BEFORE))
-    output_color *= compute_texel(uv, FX);
+    //if (!bool(FX & TEX_BEFORE))
+    //output_color *= compute_texel(uv, FX);
 
     return output_color;
 }
 
 void main()
 {
-    vec2 uv = interpolated_tex_coords;
-
-    vec3 normal = interpolated_normal;
-    normal = texture(texture_normal1, uv).rgb;
-    normal = normalize(normal * 2.0 - 1.0);
-    normal = normalize(TBN * normal);
+    uv = interpolated_tex_coords;
 
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
@@ -178,6 +217,6 @@ void main()
         else if (factory_level_render == 5)
         FX = int(abs(cos(rand * i)) * (1 << 10));
 
-        output_color = apply_effects(uv, normal, output_color, FX);
+        output_color = apply_effects(output_color, FX);
     }
 }

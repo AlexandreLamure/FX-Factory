@@ -38,7 +38,8 @@ namespace FX
         SCREEN_RECTANGLES       = 1 << 3,
         SCREEN_DISTORTION       = 1 << 4,
         SCREEN_K7               = 1 << 5,
-        SCREEN_PIXELIZE         = 1 << 6
+        SCREEN_PIXELIZE         = 1 << 6,
+        SCREEN_RAIN             = 1 << 7
     };
 
     template<typename T>

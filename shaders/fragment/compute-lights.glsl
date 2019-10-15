@@ -1,42 +1,93 @@
 #version 430
 
-vec4 compute_lights(vec4 interpolated_pos, vec3 normal,
-                    vec3 ambient_light_color,
-                    vec3 light1_color, vec3 light1_position,
-                    vec3 light2_color, vec3 light2_position,
-                    vec3 camera_pos,
-                    vec4 color_org)
+struct Material // Use vec3 instead of sampler2D to avoid expensive copy of data
 {
-    // diffuse 1
-    vec3 light1_dir = normalize(vec3(light1_position - interpolated_pos.xyz));
-    float coef = dot(normal, light1_dir);
-    coef = clamp(coef, 0, 1);
-    vec3 light_color = light1_color * coef;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+};
 
-    // diffuse 2
-    vec3 light2_dir = normalize(vec3(light2_position - interpolated_pos.xyz));
-    float coef2 = dot(normal, light2_dir);
-    coef2 = clamp(coef2, 0, 1);
-    light_color += light2_color * coef2;
+struct DirLight
+{
+    vec3 dir;
 
-    // specular 1
-    int shininess = 32;
-    float spec_strength = 0.7;
-    vec3 camera_dir1 = normalize(camera_pos - interpolated_pos.xyz);
-    vec3 reflect_dir1 = reflect(-light1_dir, normal);
-    float spec1 = pow(max(dot(camera_dir1, reflect_dir1), 0.0), shininess);
-    vec3 specular1 = spec_strength * spec1 * light1_color;
-    light_color += specular1;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
 
-    // specular 2
-    vec3 camera_dir2 = normalize(camera_pos - interpolated_pos.xyz);
-    vec3 reflect_dir2 = reflect(-light2_dir, normal);
-    float spec2 = pow(max(dot(camera_dir2, reflect_dir2), 0.0), shininess);
-    vec3 specular2 = spec_strength * spec2 * light2_color;
-    light_color += specular2;
+struct PointLight
+{
+    vec3 pos;
 
-    // ambient
-    light_color += ambient_light_color;
+    float constant;
+    float linear;
+    float quadratic;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+#define NB_DIR_LIGHTS 1
+#define NB_POINT_LIGHTS 2
+
+vec3 compute_dir_light(DirLight light, Material material, vec3 normal, vec3 camera_dir)
+{
+    vec3 light_dir = normalize(-light.dir);
+    // diffuse shading
+    float diff = max(dot(normal, light_dir), 0.0);
+    // specular shading
+    vec3 reflect_dir = reflect(-light_dir, normal);
+    float spec = pow(max(dot(camera_dir, reflect_dir), 0.0), material.shininess); //FIXME: shininess
+    // combine results
+    vec3 ambient  = light.ambient  * material.ambient;
+    vec3 diffuse  = light.diffuse  * diff * material.diffuse;
+    vec3 specular = light.specular * spec * material.specular;
+    return (ambient + diffuse + specular);
+}
+
+vec3 compute_point_light(PointLight light, Material material, vec3 normal, vec4 interpolated_pos, vec3 camera_dir)
+{
+    vec3 light_dir = normalize(light.pos - interpolated_pos.xyz);
+    // diffuse shading
+    float diff = max(dot(normal, light_dir), 0.0);
+    // specular shading
+    vec3 reflect_dir = reflect(-light_dir, normal);
+    float spec = pow(max(dot(camera_dir, reflect_dir), 0.0), material.shininess);
+    // attenuation
+    float distance = length(light.pos - interpolated_pos.xyz);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+    // combine results
+    vec3 ambient  = light.ambient  * material.ambient;
+    vec3 diffuse  = light.diffuse  * diff * material.diffuse;
+    vec3 specular = light.specular * spec * material.specular;
+    ambient  *= attenuation;
+    diffuse  *= attenuation;
+    specular *= attenuation;
+    return (ambient + diffuse + specular);
+}
+
+vec4 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
+                    vec3 camera_pos, vec4 color_org,
+                    Material material,
+                    DirLight dir_lights[NB_DIR_LIGHTS],
+                    PointLight point_lights[NB_POINT_LIGHTS])
+{
+    vec3 camera_dir = normalize(camera_pos - interpolated_pos.xyz);
+
+    // Directional lighting
+    vec3 light_color = vec3(0);
+    for(int i = 0; i < NB_DIR_LIGHTS; i++)
+        light_color += compute_dir_light(dir_lights[i], material, interpolated_normal, camera_dir);
+    // Point lights
+    for(int i = 0; i < NB_POINT_LIGHTS; i++)
+        light_color += compute_point_light(point_lights[i], material, interpolated_normal, interpolated_pos, camera_dir);
+    // Spot light
+    //light_color += CalcSpotLight(spotLight, norm, FragPos, camera_dir);
+
+    //return vec4(light_color, 1);
 
     return vec4(color_org.rgb * light_color, color_org.a);
 }

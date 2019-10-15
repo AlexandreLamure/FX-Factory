@@ -7,31 +7,34 @@ in vec2 interpolated_tex_coords;
 
 out vec4 output_color;
 
-uniform sampler2D texture_diffuse1;
+uniform DirLight dir_lights[NB_DIR_LIGHTS];
+uniform PointLight point_lights[NB_POINT_LIGHTS];
 
-uniform vec3 ambient_light_color;
-uniform vec3 light1_color;
-uniform vec3 light1_position;
-uniform vec3 light2_color;
-uniform vec3 light2_position;
+uniform sampler2D texture_ambient1;
+uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_specular1;
+
 uniform vec3 camera_pos;
 
 vec4 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
-                    vec3 ambient_light_color,
-                    vec3 light1_color, vec3 light1_position,
-                    vec3 light2_color, vec3 light2_position,
-                    vec3 camera_pos,
-                    vec4 color_org);
+                    vec3 camera_pos, vec4 color_org,
+                    Material material,
+                    DirLight dir_lights[NB_DIR_LIGHTS],
+                    PointLight point_lights[NB_POINT_LIGHTS]);
 
 
 void main()
 {
-    output_color = texture(texture_diffuse1, interpolated_tex_coords);
+    Material material;
+    material.ambient = vec3(texture(texture_ambient1, interpolated_tex_coords));
+    material.diffuse = vec3(texture(texture_diffuse1, interpolated_tex_coords));
+    material.specular = vec3(texture(texture_specular1, interpolated_tex_coords));
+    material.shininess = 1; //FIXME
+
 
     output_color = compute_lights(interpolated_pos, interpolated_normal,
-                                  ambient_light_color,
-                                  light1_color, light1_position,
-                                  light2_color, light2_position,
-                                  camera_pos,
-                                  output_color);
+                                  camera_pos, vec4(1),
+                                  material,
+                                  dir_lights,
+                                  point_lights);
 }

@@ -13,7 +13,7 @@ namespace FX
         frag_renders = std::vector<FragRender>(nb_models);
 
         for (int i = 0; i < nb_models; ++i)
-            frag_renders[i] = FragRender::COMPUTE_LIGHT | FragRender::TEX_BEFORE;
+            frag_renders[i] = FragRender::COMPUTE_LIGHT;
 
         frag_screen = FragScreen::SCREEN_TEX_BEFORE;
         factory_level_render = 0;

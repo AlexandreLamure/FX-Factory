@@ -150,11 +150,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         toggle(fx_factory.frag_screen, FX::FragScreen::SCREEN_K7);
     if (key == GLFW_KEY_M && action == GLFW_PRESS)
         toggle(fx_factory.frag_screen, FX::FragScreen::SCREEN_PIXELIZE);
-
-    std::cout << "current model = " << fx_factory.current_model << std::endl
-              << "frag_render = " << fx_factory.frag_renders[fx_factory.current_model] << std::endl
-              << "frag_screen = " << fx_factory.frag_screen << std::endl;
-
+    if (key == GLFW_KEY_COMMA && action == GLFW_PRESS)
+        toggle(fx_factory.frag_screen, FX::FragScreen::SCREEN_RAIN);
 }
 
 void process_input(GLFWwindow *window, float delta_time)
@@ -187,19 +184,38 @@ void set_uniforms(Program& program, int window_w, int window_h, float total_time
     program.set_vec2("resolution", window_w, window_h);
     // set random
     program.set_int("rand", std::rand() % 100);
-    // set lights
-    program.set_vec3("ambient_light_color", 0.5f, 0.5f, 0.5f);
-    program.set_vec3("light1_color", 1.0f, 1.0f, 1.0f);
-    program.set_vec3("light1_position", -5.0f, 15.0f, 10.0f);
-    program.set_vec3("light2_color", 0.8f, 0.0f + (cos(total_time)), 0.3f);
-    program.set_vec3("light2_position", 5.0f, 0.0f, 2.0f);
+
+    // set lights FIXME: abstract in class or using uniform buffer object
+    // directional light
+    program.set_vec3("dir_lights[0].dir", -1.f, -1.0f, -1.f);
+    program.set_vec3("dir_lights[0].ambient", 0.1f, 0.1f, 0.1f);
+    program.set_vec3("dir_lights[0].diffuse", 0.6f, 0.6f, 0.6f);
+    program.set_vec3("dir_lights[0].specular", 0.5f, 0.5f, 0.5f);
+    // point light 1
+    program.set_vec3("point_lights[0].pos", -5.0f, 15.0f, 10.0f);
+    program.set_vec3("point_lights[0].ambient", 0.1f, 0.1f, 0.1f);
+    program.set_vec3("point_lights[0].diffuse", 1.0f, 1.0f, 1.0f);
+    program.set_vec3("point_lights[0].specular", 1.0f, 1.0f, 1.0f);
+    program.set_float("point_lights[0].constant", 1.0f);
+    program.set_float("point_lights[0].linear", 0.09);
+    program.set_float("point_lights[0].quadratic", 0.032);
+    // point light 2
+    program.set_vec3("point_lights[1].pos", 5.0f, 0.0f, 2.0f);
+    program.set_vec3("point_lights[1].ambient", 0.1f, 0.1f, 0.1f);
+    program.set_vec3("point_lights[1].diffuse", 0.8f, 0.0f + cos(total_time), 0.3f);
+    program.set_vec3("point_lights[1].specular", 1.0f, 1.0f, 1.0f);
+    program.set_float("point_lights[1].constant", 1.0f);
+    program.set_float("point_lights[1].linear", 0.09);
+    program.set_float("point_lights[1].quadratic", 0.032);
+
     program.set_vec3("camera_pos", camera.pos);
     program.set_vec2("mouse_pos", camera.mouse_pos);
 
     glm::mat4 view = glm::lookAt(camera.pos, camera.pos + camera.front, camera.up);
     program.set_mat4("view", view);
 
-    glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)window_w/(float)window_h, 0.1f, 1000.0f);
+    float window_ratio = window_w > window_h ? (float)window_w/(float)window_h : (float)window_h/(float)window_w;
+    glm::mat4 projection = glm::perspective(glm::radians(camera.fov), window_ratio, 0.1f, 1000.0f);
     program.set_mat4("projection", projection);
 }
 
@@ -217,8 +233,8 @@ std::pair<std::vector<const char*>, std::vector<const char*>> gen_frag_paths(std
 int main()
 {
     // window variables
-    int window_w = 1200;
-    int window_h = 1000;
+    int window_w = 1420;
+    int window_h = 1080;
 
     // time variables
     float total_time = 0.f;
@@ -271,7 +287,8 @@ int main()
                                                    "../shaders/fragment/screen/distortion.glsl",
                                                    "../shaders/fragment/screen/rectangles.glsl",
                                                    "../shaders/fragment/screen/k7.glsl",
-                                                   "../shaders/fragment/screen/pixelize.glsl"};
+                                                   "../shaders/fragment/screen/pixelize.glsl",
+                                                   "../shaders/fragment/screen/rain.glsl"};
     auto [ screen_frag_paths, screen_frag_paths_u ] = gen_frag_paths(screen_frag_lib_paths,
                                                                      "../shaders/fragment/screen/all.glsl",
                                                                      "../shaders/fragment/screen/all-undefined.glsl");
@@ -297,6 +314,9 @@ int main()
     // main loop
     while(!glfwWindowShouldClose(window))
     {
+        // check window size
+        glfwGetWindowSize(window, &window_w, &window_h);
+
         // update delta_time
         total_time = glfwGetTime();
         delta_time = total_time - last_time;

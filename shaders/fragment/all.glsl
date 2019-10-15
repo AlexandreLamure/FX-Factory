@@ -148,12 +148,6 @@ vec4 apply_effects(vec4 output_color, int FX)
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
 
-    if (bool(FX & COLORIZE))
-        output_color = colorize(interpolated_pos, normal, total_time, mesh_id, rand, output_color, 3);
-
-    if (bool(FX & EDGE_ENHANCE))
-        output_color = edge_enhance(uv, texture_diffuse1, total_time, output_color, 0.55, true);
-
     if (bool(FX & COMPUTE_LIGHT))
     {
         Material material;
@@ -168,6 +162,13 @@ vec4 apply_effects(vec4 output_color, int FX)
                                       dir_lights,
                                       point_lights);
     }
+
+
+    if (bool(FX & COLORIZE))
+        output_color = colorize(interpolated_pos, normal, total_time, mesh_id, rand, output_color, 3);
+
+    if (bool(FX & EDGE_ENHANCE))
+        output_color = edge_enhance(uv, texture_diffuse1, total_time, output_color, 0.55, true);
 
     if (bool(FX & TOONIFY))
     {

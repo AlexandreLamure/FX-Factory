@@ -4,6 +4,7 @@
 // It is a copy of shader `all.glsl'. You sould NEVER code into.
 
 
+// FIXME : remove light structs from all.glsl
 struct Material // Use vec3 instead of sampler2D to avoid expensive copy of data
 {
     vec3 ambient;
@@ -151,12 +152,6 @@ vec4 apply_effects(vec4 output_color, int FX)
     /* ------------------------------------------------------- */
     /* ------------------------------------------------------- */
 
-    if (bool(FX & COLORIZE))
-    output_color = colorize(interpolated_pos, normal, total_time, mesh_id, rand, output_color, 3);
-
-    if (bool(FX & EDGE_ENHANCE))
-    output_color = edge_enhance(uv, texture_diffuse1, total_time, output_color, 0.55, true);
-
     if (bool(FX & COMPUTE_LIGHT))
     {
         Material material;
@@ -172,6 +167,13 @@ vec4 apply_effects(vec4 output_color, int FX)
         point_lights);
     }
 
+
+    if (bool(FX & COLORIZE))
+    output_color = colorize(interpolated_pos, normal, total_time, mesh_id, rand, output_color, 3);
+
+    if (bool(FX & EDGE_ENHANCE))
+    output_color = edge_enhance(uv, texture_diffuse1, total_time, output_color, 0.55, true);
+
     if (bool(FX & TOONIFY))
     {
         output_color = toonify(output_color);
@@ -186,7 +188,7 @@ vec4 apply_effects(vec4 output_color, int FX)
 
 
     //if (!bool(FX & TEX_BEFORE))
-    //output_color *= compute_texel(uv, FX);
+    //    output_color *= compute_texel(uv, FX);
 
     return output_color;
 }

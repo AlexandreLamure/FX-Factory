@@ -116,8 +116,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::UNDEFINED);
     if (key == GLFW_KEY_R && action == GLFW_PRESS)
         toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::COMPUTE_LIGHT);
-    if (key == GLFW_KEY_T && action == GLFW_PRESS)
-        toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::TEX_BEFORE);
     if (key == GLFW_KEY_Y && action == GLFW_PRESS)
         toggle(fx_factory.frag_renders[fx_factory.current_model], FX::FragRender::TEX_MOVE);
     if (key == GLFW_KEY_U && action == GLFW_PRESS)

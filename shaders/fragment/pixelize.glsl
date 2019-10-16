@@ -7,8 +7,8 @@ float snoise(vec2 v);
 float snoise(vec3 v);
 float snoise(vec4 v);
 
-vec4 pixelize(vec2 uv,
-              sampler2D texture_diffuse1,
+vec3 pixelize(vec2 uv,
+              sampler2D light_texture,
               float total_time)
 {
     const float rt_w = 200 * snoise(vec2(fract(total_time / 50) * 1.2)) + 1000;
@@ -21,6 +21,6 @@ vec4 pixelize(vec2 uv,
     float dy = pixel_h * (1. / rt_h);
     vec2 coord = vec2(dx * floor(uv.x / dx),
     dy * floor(uv.y / dy));
-    tc = texture2D(texture_diffuse1, coord).rgb;
-    return vec4(tc, 1.0);
+    tc = texture2D(light_texture, coord).rgb;
+    return tc;
 }

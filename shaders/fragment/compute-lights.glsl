@@ -40,7 +40,7 @@ vec3 compute_dir_light(DirLight light, Material material, vec3 normal, vec3 came
     float diff = max(dot(normal, light_dir), 0.0);
     // specular shading
     vec3 reflect_dir = reflect(-light_dir, normal);
-    float spec = pow(max(dot(camera_dir, reflect_dir), 0.0), material.shininess); //FIXME: shininess
+    float spec = pow(max(dot(camera_dir, reflect_dir), 0.0), material.shininess);
     // combine results
     vec3 ambient  = light.ambient  * material.ambient;
     vec3 diffuse  = light.diffuse  * diff * material.diffuse;
@@ -86,8 +86,6 @@ vec4 compute_lights(vec4 interpolated_pos, vec3 interpolated_normal,
         light_color += compute_point_light(point_lights[i], material, interpolated_normal, interpolated_pos, camera_dir);
     // Spot light
     //light_color += CalcSpotLight(spotLight, norm, FragPos, camera_dir);
-
-    //return vec4(light_color, 1);
 
     return vec4(color_org.rgb * light_color, color_org.a);
 }

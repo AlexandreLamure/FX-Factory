@@ -19,15 +19,14 @@ namespace FX
     {
         UNDEFINED               = 1 << 0,
         COMPUTE_LIGHT           = 1 << 1,
-        TEX_BEFORE              = 1 << 2,
-        TEX_MOVE                = 1 << 3,
-        TEX_MOVE_GLITCH         = 1 << 4,
-        COLORIZE                = 1 << 5,
-        TEX_RGB_SPLIT           = 1 << 6,
-        EDGE_ENHANCE            = 1 << 7,
-        TOONIFY                 = 1 << 8,
-        HORRORIFY               = 1 << 9,
-        PIXELIZE                = 1 << 10
+        TEX_MOVE                = 1 << 2,
+        TEX_MOVE_GLITCH         = 1 << 3,
+        COLORIZE                = 1 << 4,
+        TEX_RGB_SPLIT           = 1 << 5,
+        EDGE_ENHANCE            = 1 << 6,
+        TOONIFY                 = 1 << 7,
+        HORRORIFY               = 1 << 8,
+        PIXELIZE                = 1 << 9
     };
 
     enum FragScreen

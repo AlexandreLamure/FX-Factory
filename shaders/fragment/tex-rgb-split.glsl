@@ -1,7 +1,7 @@
 #version 430
 
-vec4 tex_rgb_split(vec2 uv,
-                   sampler2D texture_diffuse1,
+vec3 tex_rgb_split(vec2 uv,
+                   sampler2D light_texture,
                    float total_time,
                    int rand)
 {
@@ -12,10 +12,8 @@ vec4 tex_rgb_split(vec2 uv,
     vec2 value = d * dir * (cos(total_time) * float(rand == rand % 10));
 
     // compute each channel
-    vec4 c1 = texture(texture_diffuse1, uv - value);
-    vec4 c2 = texture(texture_diffuse1, uv);
-    vec4 c3 = texture(texture_diffuse1, uv + value);
-    vec4 texel = vec4(c1.r, c2.g, c3.b, c1.a + c2.a + c3.a);
-
-    return texel;
+    vec4 c1 = texture(light_texture, uv - value);
+    vec4 c2 = texture(light_texture, uv);
+    vec4 c3 = texture(light_texture, uv + value);
+    return vec3(c1.r, c2.g, c3.b);
 }

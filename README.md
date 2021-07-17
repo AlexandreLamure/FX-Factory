@@ -40,14 +40,13 @@ cmake --build . --config Release -j
  
  **Some examples:**
  
-<a href="https://i.imgur.com/BE9g7IO.jpg"><img src="https://i.imgur.com/BE9g7IO.jpg" width="380"/></a> <a href="https://i.imgur.com/dChfb7D.jpg"><img src="https://i.imgur.com/dChfb7D.jpg" width="380"/></a>
-<a href="https://i.imgur.com/zlOkwuV.jpg"><img src="https://i.imgur.com/zlOkwuV.jpg" width="380"/></a> <a href="https://i.imgur.com/kCmlAbH.jpg"><img src="https://i.imgur.com/kCmlAbH.jpg" width="380"/></a>
-<a href="https://i.imgur.com/dTDITVa.jpg"><img src="https://i.imgur.com/dTDITVa.jpg" width="380"/></a> <a href="https://i.imgur.com/dEk8FcN.jpg"><img src="https://i.imgur.com/dEk8FcN.jpg" width="380"/></a>
-<a href="https://i.imgur.com/GhQjKcZ.jpg"><img src="https://i.imgur.com/GhQjKcZ.jpg" width="380"/></a> <a href="https://i.imgur.com/VNqbOhc.jpg"><img src="https://i.imgur.com/VNqbOhc.jpg" width="380"/></a>
-<a href="https://i.imgur.com/oe7wcBJ.jpg"><img src="https://i.imgur.com/oe7wcBJ.jpg" width="380"/></a> <a href="https://i.imgur.com/BpAt63i.jpg"><img src="https://i.imgur.com/BpAt63i.jpg" width="380"/></a>
-<a href="https://i.imgur.com/iIrCDuh.jpg"><img src="https://i.imgur.com/iIrCDuh.jpg" width="380"/></a> <a href="https://i.imgur.com/noFMITX.jpg"><img src="https://i.imgur.com/noFMITX.jpg" width="380"/></a>
-<a href="https://i.imgur.com/FSRbqkc.jpg"><img src="https://i.imgur.com/FSRbqkc.jpg" width="380"/></a> <a href="https://i.imgur.com/gAdD5Ry.jpg"><img src="https://i.imgur.com/gAdD5Ry.jpg" width="380"/></a>
-<a href="https://i.imgur.com/jEXGkSX.jpg"><img src="https://i.imgur.com/jEXGkSX.jpg" width="380"/></a> <a href="https://i.imgur.com/WBr9lOK.jpg"><img src="https://i.imgur.com/WBr9lOK.jpg" width="380"/></a>
+| ![](https://media.giphy.com/media/EuBYJrfQKkusvTQaUT/giphy.gif) | ![](https://media.giphy.com/media/WpPQYIq5Nlb8YeMKNs/giphy.gif) |
+| -------- | -------- |
+| ![](https://media.giphy.com/media/QR1pN9MwpROmwDSdUQ/giphy.gif) | ![](https://media.giphy.com/media/9dHuWVezErZgW3cK6j/giphy.gif) |
+| ![](https://media.giphy.com/media/4B3V8N63f4ybCRRTZ3/giphy.gif) | ![](https://media.giphy.com/media/hbN5FbTdhJaZ7rhIFq/giphy.gif) |
+| ![](https://media.giphy.com/media/2Yn2fxr3MssQro71Dr/giphy.gif) | ![](https://media.giphy.com/media/YyWHjGr9FCRNswSkl5/giphy.gif) |
+| ![](https://media.giphy.com/media/nW1pSNGjp2ZvQ0ZUqK/giphy.gif) | ![](https://media.giphy.com/media/UHSzftE6srMrayYo0z/giphy.gif) |
+
 
  
 ## Commands

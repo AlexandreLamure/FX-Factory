@@ -40,12 +40,12 @@ cmake --build . --config Release -j
  
  **Some examples:**
  
-| ![](https://media.giphy.com/media/EuBYJrfQKkusvTQaUT/giphy.gif) | ![](https://media.giphy.com/media/WpPQYIq5Nlb8YeMKNs/giphy.gif) |
+| ![](readme/1.gif) | ![](readme/2.gif) |
 | -------- | -------- |
-| ![](https://media.giphy.com/media/QR1pN9MwpROmwDSdUQ/giphy.gif) | ![](https://media.giphy.com/media/9dHuWVezErZgW3cK6j/giphy.gif) |
-| ![](https://media.giphy.com/media/4B3V8N63f4ybCRRTZ3/giphy.gif) | ![](https://media.giphy.com/media/hbN5FbTdhJaZ7rhIFq/giphy.gif) |
-| ![](https://media.giphy.com/media/2Yn2fxr3MssQro71Dr/giphy.gif) | ![](https://media.giphy.com/media/YyWHjGr9FCRNswSkl5/giphy.gif) |
-| ![](https://media.giphy.com/media/nW1pSNGjp2ZvQ0ZUqK/giphy.gif) | ![](https://media.giphy.com/media/UHSzftE6srMrayYo0z/giphy.gif) |
+| ![](readme/3.gif) | ![](readme/4.gif) |
+| ![](readme/5.gif) | ![](readme/6.gif) |
+| ![](readme/7.gif) | ![](readme/8.gif) |
+| ![](readme/9.gif) | ![](readme/10.gif) |
 
 
  
